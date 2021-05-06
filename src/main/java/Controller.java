@@ -7,6 +7,7 @@ public class Controller {
 
     @FXML
     public Button jsam;
+    public Button paevahind;
     @FXML
     private Label lblOutput;
 
