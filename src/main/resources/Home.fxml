@@ -103,7 +103,7 @@
                   </Button>
                </children>
             </GridPane>
-            <TableView prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="2">
+            <TableView fx:id="tabelElektrihinnad" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="2">
               <columns>
                 <TableColumn fx:id="tabelKuupäev" prefWidth="75.0" text="Kuupäev" />
                 <TableColumn fx:id="tabelKõrgeimHind" prefWidth="100.0" text="Kõrgeim hind" />

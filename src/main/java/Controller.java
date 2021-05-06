@@ -13,6 +13,7 @@ public class Controller {
     public DatePicker algusKuupäev;
     public Button päringUuteAndmetega;
     public Button SalvestaCsv;
+    public TableView tabelElektrihinnad;
     public TableColumn tabelKuupäev;
     public TableColumn tabelKõrgeimHind;
     public TableColumn tabelMadalaimHind;
@@ -20,6 +21,7 @@ public class Controller {
     public TextField elektrihindMaxPeriood;
     public TextField elektrihimdMinPeriood;
     public TextField elektrihindKeskminePeriood;
+
     @FXML
     private Label lblOutput;
 
