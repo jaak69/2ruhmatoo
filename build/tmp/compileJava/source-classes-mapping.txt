@@ -1,4 +1,14 @@
 Main.java
  Main
+Päevahind.java
+ Päevahind
+KuvaElektriHind.java
+ KuvaElektriHind
+EleringJsonApi.java
+ EleringJsonApi
+Elektrihind.java
+ Elektrihind
 Controller.java
  Controller
+Test.java
+ Test

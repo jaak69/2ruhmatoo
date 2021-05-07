@@ -54,18 +54,24 @@ public class Päevahind {
         return keskmineHind;
     }
 
-    public List<Elektrihind> getElektriHinnad() throws IOException, ParseException {
+    public List<Elektrihind> getElektriHinnad(){
+        /*EleringJsonApi eleringJsonData = new EleringJsonApi(restEndPoint);
+        KuvaElektriHind elektriHind = new KuvaElektriHind();
+        eleringJsonData.setStart(perioodiAlgus);
+        eleringJsonData.setEnd(perioodiLõpp);
+        data = eleringJsonData.getEleringData();
+        elektriHind.leiaMinMaxKeskm((JSONObject) data.get("data"), riik);
+         */
+        return elektriHinnad;
+    }
+
+    public void arvutaElektriHinnad() throws IOException, ParseException {
         EleringJsonApi eleringJsonData = new EleringJsonApi(restEndPoint);
         KuvaElektriHind elektriHind = new KuvaElektriHind();
         eleringJsonData.setStart(perioodiAlgus);
         eleringJsonData.setEnd(perioodiLõpp);
         data = eleringJsonData.getEleringData();
         elektriHind.leiaMinMaxKeskm((JSONObject) data.get("data"), riik);
-
-
-
-
-        return elektriHinnad;
     }
 
 
