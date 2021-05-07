@@ -77,5 +77,7 @@ public class KuvaElektriHind {
         keskmineHind = String.valueOf(leiaKeskmine());
         minHind = String.valueOf(tipud.get(0).getHind()) + " " + String.valueOf(tipud.get(0).getAeg());
         maksHind = String.valueOf(põhjad.get(0).getHind()) + " " + String.valueOf(põhjad.get(0).getAeg());
+        System.out.println(minHind);
+        System.out.println(maksHind);
     }
 }

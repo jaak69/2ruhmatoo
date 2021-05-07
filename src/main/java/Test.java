@@ -4,11 +4,13 @@ public class Test {
         String lõpp = "2021-05-02";
         String riigiTähis = "ee";
 
+        System.out.println("Alustan");
+
         Päevahind päevahind = new Päevahind();
         päevahind.setPerioodiAlgus(algus);
         päevahind.setPerioodiLõpp(lõpp);
         päevahind.setRiik(riigiTähis);
 
-        
+        //System.out.println(päevahind.getMaxHind());
     }
 }

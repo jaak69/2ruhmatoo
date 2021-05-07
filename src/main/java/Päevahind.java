@@ -1,5 +1,7 @@
 import org.json.simple.JSONObject;
+import org.json.simple.parser.ParseException;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -52,13 +54,13 @@ public class Päevahind {
         return keskmineHind;
     }
 
-    public List<Elektrihind> getElektriHinnad() {
+    public List<Elektrihind> getElektriHinnad() throws IOException, ParseException {
         EleringJsonApi eleringJsonData = new EleringJsonApi(restEndPoint);
         KuvaElektriHind elektriHind = new KuvaElektriHind();
         eleringJsonData.setStart(perioodiAlgus);
         eleringJsonData.setEnd(perioodiLõpp);
         data = eleringJsonData.getEleringData();
-        //elektriHind.määratudVahemikuMinMax((JSONObject) data.get("data"), riik);
+        elektriHind.leiaMinMaxKeskm((JSONObject) data.get("data"), riik);
 
 
 
