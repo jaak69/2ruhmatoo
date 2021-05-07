@@ -14,7 +14,7 @@ public class Päevahind {
     private JSONObject data;
     private String restEndPoint = "/api/nps/price";
 
-    public Päevahind(String riik, String perioodiAlgus, String perioodiLõpp, int minHind, int maxHind, int keskmineHind, List<Elektrihind> elektriHinnad, String restEndPoint) {
+    /*public Päevahind(String riik, String perioodiAlgus, String perioodiLõpp, int minHind, int maxHind, int keskmineHind, List<Elektrihind> elektriHinnad, String restEndPoint) {
         this.riik = riik;
         this.perioodiAlgus = perioodiAlgus + " 00:00";
         this.perioodiLõpp = perioodiLõpp + " 23:59";
@@ -25,6 +25,8 @@ public class Päevahind {
         this.data = data;
         this.restEndPoint = restEndPoint;
     }
+
+     */
 
     public void setRiik(String riik) {
         this.riik = riik;
@@ -56,7 +58,7 @@ public class Päevahind {
         eleringJsonData.setStart(perioodiAlgus);
         eleringJsonData.setEnd(perioodiLõpp);
         data = eleringJsonData.getEleringData();
-        elektriHind.määratudVahemikuMinMax((JSONObject) data.get("data"), riik);
+        //elektriHind.määratudVahemikuMinMax((JSONObject) data.get("data"), riik);
 
 
 
