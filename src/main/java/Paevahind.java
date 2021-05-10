@@ -2,12 +2,9 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class Paevahind {
@@ -17,20 +14,20 @@ public class Paevahind {
     private Elektrihind minHind = new Elektrihind();
     private Elektrihind maxHind = new Elektrihind();
     private int keskmineHind;
-    private List<Elektrihind> elektriHinnad;
     private JSONObject data;
     private String restEndPoint = "/api/nps/price";
     DateTimeFormatter dtformat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:00");
 
-    public Paevahind(String riik, String perioodiAlgus, String perioodiLõpp, int minHind, int maxHind, int keskmineHind, List<Elektrihind> elektriHinnad, JSONObject data, String restEndPoint) {
+    /*public Paevahind(String riik, String perioodiAlgus, String perioodiLõpp, int minHind, int maxHind, int keskmineHind, JSONObject data, String restEndPoint) {
         this.riik = riik;
         this.perioodiAlgus = perioodiAlgus;
         this.perioodiLõpp = perioodiLõpp;
         this.keskmineHind = keskmineHind;
-        this.elektriHinnad = elektriHinnad;
         this.data = data;
         this.restEndPoint = restEndPoint;
     }
+
+     */
 
     public Paevahind(String riik) {
         this.riik = riik;

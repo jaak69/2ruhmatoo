@@ -12,9 +12,12 @@ public class KuvaElektriHind {
     private ArrayList<Elektrihind> tipud = new ArrayList<>();
     private ArrayList<Elektrihind> põhjad = new ArrayList<>();
     private ArrayList<ElektriHindPaev> paevadeHinnad = new ArrayList<>();
-    private String minHind;
+    private ArrayList<Elektrihind> minHindadeList = new ArrayList<>();
+    private ArrayList<Elektrihind> maxHinddadeList = new ArrayList<>();
+    /*private String minHind;
     private String maksHind;
     private String keskmineHind;
+     */
 
     private String tunnidTimestampist (Long timestamp){
         return new SimpleDateFormat("dd-MM-yyyy HH:mm").format(new Date((timestamp)*1000L));
@@ -26,7 +29,6 @@ public class KuvaElektriHind {
 
     private void nulliListid(){
         elektrihind.clear();
-        paevadeHinnad.clear();
         tipud.clear();
         põhjad.clear();
     }
@@ -55,7 +57,6 @@ public class KuvaElektriHind {
 
     private double leiaKeskmine (){
         double summa = 0.0;
-        int pikkus;
         for (int i = 0; i <elektrihind.size();i++){
             summa += elektrihind.get(i).getHind();
         }
@@ -84,20 +85,20 @@ public class KuvaElektriHind {
         for (int i = 0; i < dataRiik.size(); i++){
             tunniInfo = (JSONObject) dataRiik.get(i);
             testPäev = kuupäevTimestampist((Long) tunniInfo.get("timestamp"));
-            if (!testPäev.equals(algusPäev)){
-                algusPäev = testPäev;
+            if (!testPäev.equals(algusPäev) || (i == dataRiik.size() - 2)){
                 päevaKeskmine = leiaKeskmine();
-                //päevaMaksimum = topUp(1).;
-                //päevaMiinimum = topDown(1);
-
+                päevaMaksimum = topUp(1).get(0).getHind();
+                päevaMiinimum = topDown(1).get(0).getHind();
+                ElektriHindPaev uksPaev = new ElektriHindPaev(algusPäev,päevaKeskmine,päevaMaksimum,päevaMiinimum);
+                paevadeHinnad.add(uksPaev);
+                nulliListid();
+                algusPäev = testPäev;
             }
             String aeg = tunnidTimestampist((Long) tunniInfo.get("timestamp"));
             double hind = Math.round(((double) tunniInfo.get("price"))/10.0*100)/100.0;
             Elektrihind tunnihind = new Elektrihind(aeg,hind);
             elektrihind.add(tunnihind);
         }
-
-
     }
 
     private void teeEttevalmistus (JSONObject statesJson, String riik){
@@ -128,10 +129,10 @@ public class KuvaElektriHind {
     }
 
     public List<ElektriHindPaev> leiaPaevadeHinnad (JSONObject statesJson, String riik){
-        List<ElektriHindPaev> päevadeHinnad = new ArrayList<>();
         nulliListid();
-
-        return päevadeHinnad;
+        paevadeHinnad.clear();
+        loeJsonKuu(statesJson, riik);
+        return paevadeHinnad;
     }
 
 }
