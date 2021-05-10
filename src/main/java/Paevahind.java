@@ -3,6 +3,9 @@ import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -11,20 +14,18 @@ public class Paevahind {
     private String riik;
     private String perioodiAlgus;
     private String perioodiLõpp;
-    private int minHind;
-    private int maxHind;
+    private Elektrihind minHind = new Elektrihind();
+    private Elektrihind maxHind = new Elektrihind();
     private int keskmineHind;
     private List<Elektrihind> elektriHinnad;
     private JSONObject data;
     private String restEndPoint = "/api/nps/price";
-    SimpleDateFormat sdformat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+    DateTimeFormatter dtformat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:00");
 
     public Paevahind(String riik, String perioodiAlgus, String perioodiLõpp, int minHind, int maxHind, int keskmineHind, List<Elektrihind> elektriHinnad, JSONObject data, String restEndPoint) {
         this.riik = riik;
         this.perioodiAlgus = perioodiAlgus;
         this.perioodiLõpp = perioodiLõpp;
-        this.minHind = minHind;
-        this.maxHind = maxHind;
         this.keskmineHind = keskmineHind;
         this.elektriHinnad = elektriHinnad;
         this.data = data;
@@ -53,21 +54,22 @@ public class Paevahind {
         return kuvaElektriHind.leiaKeskmised((JSONObject) data.get("data"),riik);
     }
 
-    public double maksimaalneHind () throws IOException, ParseException {
+    public Elektrihind maksimaalneHind () throws IOException, ParseException {
         teeEttevalmistus();
         KuvaElektriHind kuvaElektriHind = new KuvaElektriHind();
         return kuvaElektriHind.leiaMaxHind((JSONObject) data.get("data"),riik);
     }
 
-    public double minimaalneHind () throws IOException, ParseException {
+    public Elektrihind minimaalneHind () throws IOException, ParseException {
         teeEttevalmistus();
         KuvaElektriHind kuvaElektriHind = new KuvaElektriHind();
         return kuvaElektriHind.leiaMinHind((JSONObject) data.get("data"),riik);
     }
 
     private void leiaAeg (){
-        perioodiAlgus = sdformat.format(new Date((System.currentTimeMillis())));
-        perioodiLõpp = sdformat.format(new Date((System.currentTimeMillis() + 24*60*60*1000)));
+        LocalDateTime hetkeAeg = LocalDateTime.now().plusHours(-3);
+        perioodiAlgus = dtformat.format(hetkeAeg);
+        perioodiLõpp = dtformat.format(hetkeAeg.plusDays(1));
     }
 
     private void teeEttevalmistus () throws IOException, ParseException {

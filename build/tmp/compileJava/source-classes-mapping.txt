@@ -1,16 +1,18 @@
 Main.java
  Main
-Test.java
- Test
-Controller.java
- Controller
+KuvaElektriHind.java
+ KuvaElektriHind
+ElektriHindPäev.java
+ ElektriHindPäev
+PerioodiHind.java
+ PerioodiHind
 Elektrihind.java
  Elektrihind
 EleringJsonApi.java
  EleringJsonApi
-KuvaElektriHind.java
- KuvaElektriHind
 Paevahind.java
  Paevahind
-PaevahindVana.java
- PaevahindVana
+Controller.java
+ Controller
+Test.java
+ Test
