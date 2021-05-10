@@ -2,8 +2,11 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class Controller implements Initializable {
@@ -15,7 +18,7 @@ public class Controller implements Initializable {
     @FXML
     public ToggleButton valikuhind;
     @FXML
-    public Button lõpeta;
+    public Button lopeta;
     @FXML
     public ComboBox riikValik;
     @FXML
@@ -23,11 +26,11 @@ public class Controller implements Initializable {
     @FXML
     public DatePicker algusKuupäev;
     @FXML
-    public Button päringUuteAndmetega;
+    public Button paringUuteAndmetega;
     @FXML
     public Button SalvestaCsv;
     @FXML
-    public TableView tabelElektrihinnad;
+    public TableView<Elektrihind> tabelElektrihinnad;
     @FXML
     public TableColumn tabelKuupäev;
     @FXML
@@ -45,6 +48,7 @@ public class Controller implements Initializable {
 
     @FXML
     private Label lblOutput;
+
     @FXML
     public void sayHello() {
         lblOutput.setText("Hello FXML!");
@@ -56,10 +60,10 @@ public class Controller implements Initializable {
     public void valikuhindKuva(ActionEvent actionEvent) {
     }
     @FXML
-    public void lõpetaProgramm(ActionEvent actionEvent) {
+    public void lopetaProgramm(ActionEvent actionEvent) {
     }
     @FXML
-    public void käivitaPäringUuteAndmetega(ActionEvent actionEvent) {
+    public void kaivitaParingUuteAndmetega(ActionEvent actionEvent) {
     }
     @FXML
     public void salvestaCSVFail(ActionEvent actionEvent) {
@@ -69,6 +73,28 @@ public class Controller implements Initializable {
         if (valikuhind.isSelected()){
             valikuhind.setSelected(false);
         }
+        paevahind.setSelected(true);
+
+        List<Elektrihind> elektrihinnadTest = new ArrayList<>();
+
+        elektrihinnadTest.add(new Elektrihind("2021-05-01 10:00",0.26));
+        elektrihinnadTest.add(new Elektrihind("2021-05-01 11:00",0.28));
+
+        tabelElektrihinnad.getItems().clear();
+        tabelElektrihinnad.getColumns().clear();
+
+        //tabeli päise defineerimine
+        TableColumn<Elektrihind, String> kellaAegColumn = new TableColumn<>("Kellaeg");
+        kellaAegColumn.setCellValueFactory(new PropertyValueFactory<>("aeg"));
+
+        TableColumn<Elektrihind, String> kwhHind = new TableColumn<>("kWh hind");
+        kwhHind.setCellValueFactory(new PropertyValueFactory<>("hind"));
+
+        tabelElektrihinnad.getColumns().add(kellaAegColumn);
+        tabelElektrihinnad.getColumns().add(kwhHind);
+
+        tabelElektrihinnad.getItems().add(new Elektrihind("2021-05-01 10:00", 0.26));
+        tabelElektrihinnad.getItems().add(new Elektrihind("2021-05-01 11:00", 0.26));
 
 
     }

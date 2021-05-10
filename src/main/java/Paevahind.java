@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 
-public class Päevahind {
+public class Paevahind {
     private String riik;
     private String perioodiAlgus;
     private String perioodiLõpp;
