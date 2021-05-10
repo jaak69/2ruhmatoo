@@ -12,6 +12,7 @@ public class KuvaElektriHind {
     private ArrayList<Elektrihind> elektrihind = new ArrayList<>();
     private ArrayList<Elektrihind> tipud = new ArrayList<>();
     private ArrayList<Elektrihind> põhjad = new ArrayList<>();
+    private ArrayList<ElektriHindPäev> päevadeHinnad = new ArrayList<>();
     private String minHind;
     private String maksHind;
     private String keskmineHind;
@@ -22,6 +23,7 @@ public class KuvaElektriHind {
 
     private void nulliListid(){
         elektrihind.clear();
+        päevadeHinnad.clear();
         tipud.clear();
         põhjad.clear();
     }
@@ -68,21 +70,34 @@ public class KuvaElektriHind {
         }
     }
 
+    private void loeJsonKuu (JSONObject statesJson, String riik){
+        JSONArray dataRiik = (JSONArray) statesJson.get(riik);
+        //for (int i = 0; i < dataRiik.size(); i++){
+            //if (i // 24){
+
+        //}
+    }
+
+    private void teeEttevalmistus (JSONObject statesJson, String riik){
+        nulliListid();
+        loeJson(statesJson, riik);
+    }
+
     public double leiaKeskmised (JSONObject statesJson, String riik){
         teeEttevalmistus(statesJson,riik);
         return leiaKeskmine();
     }
 
-    public double leiaMaxHind (JSONObject statesJson, String riik){
+    public Elektrihind leiaMaxHind (JSONObject statesJson, String riik){
         teeEttevalmistus(statesJson,riik);
         topUp(1);
-        return tipud.get(0).getHind();
+        return tipud.get(0);
     }
 
-    public double leiaMinHind (JSONObject statesJson, String riik){
+    public Elektrihind leiaMinHind (JSONObject statesJson, String riik){
         teeEttevalmistus(statesJson,riik);
         topDown(1);
-        return põhjad.get(0).getHind();
+        return põhjad.get(0);
     }
 
     public List<Elektrihind> leiaHinnad(JSONObject statesJson, String riik){
@@ -90,8 +105,11 @@ public class KuvaElektriHind {
         return elektrihind;
     }
 
-    private void teeEttevalmistus (JSONObject statesJson, String riik){
+    public List<ElektriHindPäev> leiaPaevadeHinnad (JSONObject statesJson, String riik){
+        List<ElektriHindPäev> päevadeHinnad = new ArrayList<>();
         nulliListid();
-        loeJson(statesJson, riik);
+
+        return päevadeHinnad;
     }
+
 }

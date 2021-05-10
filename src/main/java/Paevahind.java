@@ -11,8 +11,8 @@ public class Paevahind {
     private String riik;
     private String perioodiAlgus;
     private String perioodiLõpp;
-    private int minHind;
-    private int maxHind;
+    private Elektrihind minHind = new Elektrihind();
+    private Elektrihind maxHind = new Elektrihind();
     private int keskmineHind;
     private List<Elektrihind> elektriHinnad;
     private JSONObject data;
@@ -23,8 +23,6 @@ public class Paevahind {
         this.riik = riik;
         this.perioodiAlgus = perioodiAlgus;
         this.perioodiLõpp = perioodiLõpp;
-        this.minHind = minHind;
-        this.maxHind = maxHind;
         this.keskmineHind = keskmineHind;
         this.elektriHinnad = elektriHinnad;
         this.data = data;
@@ -53,13 +51,13 @@ public class Paevahind {
         return kuvaElektriHind.leiaKeskmised((JSONObject) data.get("data"),riik);
     }
 
-    public double maksimaalneHind () throws IOException, ParseException {
+    public Elektrihind maksimaalneHind () throws IOException, ParseException {
         teeEttevalmistus();
         KuvaElektriHind kuvaElektriHind = new KuvaElektriHind();
         return kuvaElektriHind.leiaMaxHind((JSONObject) data.get("data"),riik);
     }
 
-    public double minimaalneHind () throws IOException, ParseException {
+    public Elektrihind minimaalneHind () throws IOException, ParseException {
         teeEttevalmistus();
         KuvaElektriHind kuvaElektriHind = new KuvaElektriHind();
         return kuvaElektriHind.leiaMinHind((JSONObject) data.get("data"),riik);
