@@ -39,6 +39,8 @@ public class Controller implements Initializable {
     @FXML
     private TableView<Elektrihind> tabelElektrihinnad;
     @FXML
+    private TableView tabelElektrihinnadPeriood;
+    @FXML
     private TableColumn tabelKuupäev;
     @FXML
     private TableColumn tabelKõrgeimHind;
@@ -127,6 +129,10 @@ public class Controller implements Initializable {
             valikuhind.setSelected(false);
         }
 
+        if (tabelElektrihinnadPeriood.isVisible()){
+            tabelElektrihinnadPeriood.setVisible(false);
+        }
+
         //päevavaliku menüünupp aktiivseks
         paevahind.setSelected(true);
 
@@ -190,6 +196,23 @@ public class Controller implements Initializable {
         //Tühjenda tabel
         tabelElektrihinnad.getItems().clear();
         tabelElektrihinnad.getColumns().clear();
+
+        //tabeli päise defineerimine
+        TableColumn<ElektriHindPaev, String> kuupaevColumn = new TableColumn<>("Kuupäev");
+        kuupaevColumn.setCellValueFactory(new PropertyValueFactory<>("aeg"));
+
+        TableColumn<ElektriHindPaev, String> minHindColumn = new TableColumn<>("MinHind");
+        minHindColumn.setCellValueFactory(new PropertyValueFactory<>("minHind"));
+
+        TableColumn<ElektriHindPaev, String> maxHindColumn = new TableColumn<>("MinHind");
+        maxHindColumn.setCellValueFactory(new PropertyValueFactory<>("maxHind"));
+
+        TableColumn<ElektriHindPaev, String> keskmineHindColumn = new TableColumn<>("MinHind");
+        keskmineHindColumn.setCellValueFactory(new PropertyValueFactory<>("hind"));
+
+//        tabelElektrihinnad.getColumns().add(kuupaevColumn);
+//        tabelElektrihinnad.getColumns().add(minHindColumn);
+//        tabelElektrihinnad.getColumns().add(minHindColumn);
 
 
     }
