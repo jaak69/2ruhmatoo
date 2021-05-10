@@ -4,7 +4,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.FileChooser;
 
+import java.io.File;
 import java.net.URL;
 import java.util.*;
 
@@ -78,7 +80,18 @@ public class Controller implements Initializable {
     }
     @FXML
     public void salvestaCSVFail(ActionEvent actionEvent) {
+        FileChooser fileChooser = new FileChooser();
+        //Set extension filter for text files
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv");
+        fileChooser.getExtensionFilters().add(extFilter);
+
+        //Show save file dialog
+        File file = fileChooser.showSaveDialog(null);
+
+
     }
+
+
 
     public void showPäevahind(String valitudRiik){
         if (valikuhind.isSelected()){
