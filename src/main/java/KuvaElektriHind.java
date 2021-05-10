@@ -58,9 +58,13 @@ public class KuvaElektriHind {
     }
 
     private void loeJson(JSONObject statesJson, String riik){
+        System.out.println("võttan array'st välja riigi");
         JSONArray dataRiik = (JSONArray) statesJson.get(riik);
+        System.out.println(dataRiik.size());
+        System.out.println("Hakkan hakkima");
         for (int i = 0; i < dataRiik.size();i++){
             JSONObject tunniInfo = (JSONObject) dataRiik.get(i);
+            System.out.println("tund " + i);
             String aeg = tunnidTimestampist((Long) tunniInfo.get("timestamp"));
             double hind = Math.round(((double) tunniInfo.get("price"))/10.0*100)/100.0;
             Elektrihind tunnihind = new Elektrihind(aeg,hind);
@@ -71,6 +75,7 @@ public class KuvaElektriHind {
     public String leiaKeskmised (JSONObject statesJson, String riik){
         System.out.println("nullin");
         nulliListid();
+        System.out.println(statesJson.size());
         System.out.println("loen json");
         loeJson(statesJson, riik);
         System.out.println("arvutan top'id");
