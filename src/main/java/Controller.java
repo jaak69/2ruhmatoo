@@ -1,3 +1,4 @@
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -5,9 +6,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class Controller implements Initializable {
 
@@ -22,9 +21,9 @@ public class Controller implements Initializable {
     @FXML
     public ComboBox riikValik;
     @FXML
-    public DatePicker lõpuKuupäev;
+    public DatePicker lopuKuupaev;
     @FXML
-    public DatePicker algusKuupäev;
+    public DatePicker algusKuupaev;
     @FXML
     public Button paringUuteAndmetega;
     @FXML
@@ -61,6 +60,18 @@ public class Controller implements Initializable {
     }
     @FXML
     public void lopetaProgramm(ActionEvent actionEvent) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Kas soovid töö lõpetada");
+        alert.setHeaderText("");
+        alert.setContentText("Lõpetamiseks vajuta OK!");
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK){
+            Platform.exit();
+        } else {
+         alert.close();
+        }
+
     }
     @FXML
     public void kaivitaParingUuteAndmetega(ActionEvent actionEvent) {
@@ -73,6 +84,10 @@ public class Controller implements Initializable {
         if (valikuhind.isSelected()){
             valikuhind.setSelected(false);
         }
+
+        algusKuupaev.setVisible(false);
+        lopuKuupaev.setVisible(false);
+
         paevahind.setSelected(true);
 
         List<Elektrihind> elektrihinnadTest = new ArrayList<>();
@@ -93,10 +108,12 @@ public class Controller implements Initializable {
         tabelElektrihinnad.getColumns().add(kellaAegColumn);
         tabelElektrihinnad.getColumns().add(kwhHind);
 
-        tabelElektrihinnad.getItems().add(new Elektrihind("2021-05-01 10:00", 0.26));
-        tabelElektrihinnad.getItems().add(new Elektrihind("2021-05-01 11:00", 0.26));
+        for (int i = 0; i < 32; i++) {
 
+            Random rd = new Random(); // creating Random object
+            tabelElektrihinnad.getItems().add(new Elektrihind("2021-05-01 10:00" + " " + i, rd.nextDouble()));
 
+        }
     }
 
     @Override
