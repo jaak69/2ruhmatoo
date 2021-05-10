@@ -166,7 +166,7 @@ public class Controller implements Initializable {
             String rows = null;
             for (int row = 0; row < tabelElektrihinnad.getItems().size(); row++) {
 
-                ObservableList<Elektrihind> cells = (ObservableList) tabelElektrihinnad.getItems().get(row);
+                ObservableList cells = (ObservableList) tabelElektrihinnad.getItems().get(row);
                 String temp = null;
                 for (int column = 0; column < cells.size(); column++) {
 
