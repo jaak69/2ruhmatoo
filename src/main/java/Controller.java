@@ -5,6 +5,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import org.json.simple.parser.ParseException;
 
@@ -17,6 +20,8 @@ import java.util.*;
 
 public class Controller implements Initializable {
 
+    @FXML
+    private AnchorPane globalAnchorPane;
     @FXML
     private String valitudRiik;
 
@@ -41,14 +46,6 @@ public class Controller implements Initializable {
     @FXML
     private TableView<ElektriHindPaev> tabelElektrihinnadPeriood;
     @FXML
-    private TableColumn tabelKuupäev;
-    @FXML
-    private TableColumn tabelKõrgeimHind;
-    @FXML
-    private TableColumn tabelMadalaimHind;
-    @FXML
-    private TableColumn tabelKeskmineHind;
-    @FXML
     private TextField elektrihindMaxPeriood;
     @FXML
     private TextField elektrihimdMinPeriood;
@@ -58,30 +55,31 @@ public class Controller implements Initializable {
     private ComboBox valiKuu;
     @FXML
     private ComboBox valiAasta;
-
     @FXML
-    private Label lblOutput;
+    public Button loeFail;
 
     @FXML
     public void päevahindKuva(ActionEvent actionEvent) {
         try {
-            showPäevahind((String)riikValik.getValue());
+            showPäevahind((String) riikValik.getValue());
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ParseException e) {
             e.printStackTrace();
         }
     }
+
     @FXML
     public void valikuhindKuva(ActionEvent actionEvent) {
         try {
-            showValitudPeriood((String)riikValik.getValue(),(String)valiKuu.getValue(),(String)valiAasta.getValue());
+            showValitudPeriood((String) riikValik.getValue(), (String) valiKuu.getValue(), (String) valiAasta.getValue());
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ParseException e) {
             e.printStackTrace();
         }
     }
+
     @FXML
     public void lopetaProgramm(ActionEvent actionEvent) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -90,17 +88,18 @@ public class Controller implements Initializable {
         alert.setContentText("Lõpetamiseks vajuta OK!");
 
         Optional<ButtonType> result = alert.showAndWait();
-        if (result.get() == ButtonType.OK){
+        if (result.get() == ButtonType.OK) {
             Platform.exit();
         } else {
-         alert.close();
+            alert.close();
         }
 
     }
+
     @FXML
     public void kaivitaParingUuteAndmetega(ActionEvent actionEvent) {
 
-        if (paevahind.isSelected()){
+        if (paevahind.isSelected()) {
             try {
                 showPäevahind((String) riikValik.getValue());
             } catch (IOException e) {
@@ -108,9 +107,9 @@ public class Controller implements Initializable {
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-        } else if (valikuhind.isSelected()){
+        } else if (valikuhind.isSelected()) {
             try {
-                showValitudPeriood((String)riikValik.getValue(),(String)valiKuu.getValue(),(String)valiAasta.getValue());
+                showValitudPeriood((String) riikValik.getValue(), (String) valiKuu.getValue(), (String) valiAasta.getValue());
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (ParseException e) {
@@ -119,18 +118,23 @@ public class Controller implements Initializable {
         }
 
     }
+
     @FXML
-    public void salvestaCSVFail(ActionEvent actionEvent)  {
+    public void salvestaCSVFail(ActionEvent actionEvent) {
         FileChooser fileChooser = new FileChooser();
         //Set extension filter for text files
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv");
         fileChooser.getExtensionFilters().add(extFilter);
-
+        File file = null;
         //Show save file dialog
-        File file = fileChooser.showSaveDialog(tabelElektrihinnad.getScene().getWindow());
+        if (paevahind.isSelected()) {
+            file = fileChooser.showSaveDialog(tabelElektrihinnad.getScene().getWindow());
+        } else if (valikuhind.isSelected()) {
+            file = fileChooser.showSaveDialog(tabelElektrihinnadPeriood.getScene().getWindow());
+        }
 
         try {
-            writeCSV(tabelElektrihinnad,file);
+            writeCSV(tabelElektrihinnad, tabelElektrihinnadPeriood, file);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -139,11 +143,11 @@ public class Controller implements Initializable {
 
     public void showPäevahind(String valitudRiik) throws IOException, ParseException {
         //seadista vahemiku valik mitteaktiivseks, kui on aktiivne
-        if (valikuhind.isSelected()){
+        if (valikuhind.isSelected()) {
             valikuhind.setSelected(false);
         }
 
-        if (tabelElektrihinnadPeriood.isVisible()){
+        if (tabelElektrihinnadPeriood.isVisible()) {
             tabelElektrihinnadPeriood.setVisible(false);
         }
 
@@ -188,19 +192,19 @@ public class Controller implements Initializable {
     public void showValitudPeriood(String vRiik, String vKuu, String vAasta) throws IOException, ParseException {
         //Kuude nimetused numbriteks
 
-        Map<String,Integer> kuudNumbriteks = new HashMap<>();
-        kuudNumbriteks.put("JAANUAR",1);
-        kuudNumbriteks.put("VEEBRUAR",2);
-        kuudNumbriteks.put("MÄRTS",3);
-        kuudNumbriteks.put("APRILL",4);
-        kuudNumbriteks.put("MAI",5);
-        kuudNumbriteks.put("JUUNI",6);
-        kuudNumbriteks.put("JUULI",7);
-        kuudNumbriteks.put("AUGUST",8);
-        kuudNumbriteks.put("SEPTEMBER",9);
-        kuudNumbriteks.put("OKTOOBER",10);
-        kuudNumbriteks.put("NOVEMBER",11);
-        kuudNumbriteks.put("DETSEMBER",12);
+        Map<String, Integer> kuudNumbriteks = new HashMap<>();
+        kuudNumbriteks.put("JAANUAR", 1);
+        kuudNumbriteks.put("VEEBRUAR", 2);
+        kuudNumbriteks.put("MÄRTS", 3);
+        kuudNumbriteks.put("APRILL", 4);
+        kuudNumbriteks.put("MAI", 5);
+        kuudNumbriteks.put("JUUNI", 6);
+        kuudNumbriteks.put("JUULI", 7);
+        kuudNumbriteks.put("AUGUST", 8);
+        kuudNumbriteks.put("SEPTEMBER", 9);
+        kuudNumbriteks.put("OKTOOBER", 10);
+        kuudNumbriteks.put("NOVEMBER", 11);
+        kuudNumbriteks.put("DETSEMBER", 12);
 
 
         //seadista vahemiku valik aktiivseks, kui on aktiivne
@@ -259,19 +263,28 @@ public class Controller implements Initializable {
         elektrihindMaxPeriood.setText(String.valueOf(elekterPeriood.getPerioodiMaksimaalneHind().getHind()));
         elektrihimdMinPeriood.setText(String.valueOf(elekterPeriood.getPerioodiMiniimaalneHind().getHind()));
         elektrihindKeskminePeriood.setText(String.valueOf(elekterPeriood.getPerioodiKeskmineHind()));
-
-
     }
 
-    public void writeCSV(TableView<Elektrihind> tabelElektrihinnad, File file) throws Exception {
+    public void writeCSV(TableView<Elektrihind> tabelElektrihinnad, TableView<ElektriHindPaev> tabelElektrihinnadPeriood, File file) throws Exception {
         Writer writer = null;
         try {
             writer = new BufferedWriter(new FileWriter(file));
 
-            ObservableList<Elektrihind> cells = tabelElektrihinnad.getItems();
+            ObservableList<Elektrihind> cellsPäev = null;
+            ObservableList<ElektriHindPaev> cellsPeriood = null;
 
-            for (Elektrihind hind : cells) {
-                writer.write(hind.toString());
+            if (paevahind.isSelected()) {
+                cellsPäev = tabelElektrihinnad.getItems();
+                writer.write("Kellaaeg;kWH hind\n");
+                for (Elektrihind hind : cellsPäev) {
+                    writer.write(hind.toString() + "\n");
+                }
+            } else if (valikuhind.isSelected()) {
+                cellsPeriood = tabelElektrihinnadPeriood.getItems();
+                writer.write("Kuupäev;KeskmineHind;MaxHind;MinHind\n");
+                for (ElektriHindPaev hind : cellsPeriood) {
+                    writer.write(hind.toString() + "\n");
+                }
             }
 
             Alert salvestatud = new Alert(Alert.AlertType.INFORMATION);
@@ -282,8 +295,7 @@ public class Controller implements Initializable {
             Alert salvestatud = new Alert(Alert.AlertType.WARNING);
             salvestatud.setHeaderText("Faili salvestamine ebaõnnestus!");
             salvestatud.show();
-        }
-        finally {
+        } finally {
             writer.flush();
             writer.close();
         }
@@ -293,7 +305,7 @@ public class Controller implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
 
         valiKuu.getSelectionModel().select(Month.from(LocalDate.now()).getDisplayName(TextStyle.FULL_STANDALONE,
-                new Locale("et","EE")).toUpperCase());
+                new Locale("et", "EE")).toUpperCase());
 
         valitudRiik = (String) riikValik.getValue();
 
@@ -306,4 +318,27 @@ public class Controller implements Initializable {
         }
 
     }
-}
+
+    @FXML
+    public void globalAnchorPaneKuva(KeyEvent keyEvent) {
+        System.out.println(keyEvent.getCode());
+            if (keyEvent.getCode() == KeyCode.F1) {
+                Alert abi = new Alert(Alert.AlertType.INFORMATION);
+                abi.setHeaderText("Programmi abiinfo");
+                abi.setContentText(
+                        "Elektrihindade kuvamiseks on kaks varianti:\n" +
+                                "1. Järgmised 24h\n" +
+                                "2. Valitud kuu minevikust, kuini aastani 2018\n" +
+                                "Programmi käivitamisel kuvatakse järgmise 24 tunni hinnad\n" +
+                                "Sel juhul saab valida, millise riigi hindu kuvatakse\n" +
+                                "Kui vasakult menüüst valida \"Valikuhind\"\n" +
+                                "siis kuvatakse käesoleva kuu iga päeva minimaalne, maksimaalne ja keskmine kWh hind\n" +
+                                "Tabeli kohal olevates valikukastides on võimalik muuta riiki, kuud ja aastat.\n" +
+                                "Peale valiku tegemist vajuta nuppu \"Käivita\".\n" +
+                                "Programmi töö lõpetamiseks vajuta nuppu \"Lõpeta\""
+
+                );
+                abi.show();
+            }
+        }
+    }

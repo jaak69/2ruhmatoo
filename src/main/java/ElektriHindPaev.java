@@ -29,9 +29,6 @@ public class ElektriHindPaev extends Elektrihind{
 
     @Override
     public String toString() {
-        return "ElektriHindPaev{" +
-                "maxHind=" + maxHind +
-                ", minHind=" + minHind +
-                "} " + super.toString();
+        return super.toString() + ";" + maxHind + ";" + minHind;
     }
 }

@@ -20,7 +20,7 @@ public class Elektrihind implements Comparable<Elektrihind>{
 
     @Override
     public String toString() {
-        return aeg + ";" + hind + "\n";
+        return aeg + ";" + hind;
     }
 
     @Override
