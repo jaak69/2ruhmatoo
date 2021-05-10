@@ -17,10 +17,6 @@ public class KuvaElektriHind {
     private ArrayList<Elektrihind> minHindadeList = new ArrayList<>();
     private ArrayList<Elektrihind> maxHinddadeList = new ArrayList<>();
     private ArrayList<Elektrihind> perioodiHinnad = new ArrayList<>();
-    /*private String minHind;
-    private String maksHind;
-    private String keskmineHind;
-     */
 
     private String tunnidTimestampist (Long timestamp){
         return new SimpleDateFormat("dd-MM-yyyy HH:mm").format(new Date((timestamp)*1000L));

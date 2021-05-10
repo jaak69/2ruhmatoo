@@ -15,16 +15,8 @@ public class ElektriHindPaev extends Elektrihind{
         return maxHind;
     }
 
-    public void setMaxHind(double maxHind) {
-        this.maxHind = maxHind;
-    }
-
     public double getMinHind() {
         return minHind;
-    }
-
-    public void setMinHind(double minHind) {
-        this.minHind = minHind;
     }
 
     @Override
