@@ -256,9 +256,9 @@ public class Controller implements Initializable {
         }
 
         //Ülemises ringid paika
-        elektrihindMaxPeriood.setText(String.valueOf(elekterPeriood.getPerioodiMax()));
-//        elektrihimdMinPeriood.setText(String.valueOf(elekterPeriood.get));
-//        elektrihindKeskminePeriood.setText(String.valueOf(elektriHinnad.keskmineHind()));
+        elektrihindMaxPeriood.setText(String.valueOf(elekterPeriood.getPerioodiMaksimaalneHind().getHind()));
+        elektrihimdMinPeriood.setText(String.valueOf(elekterPeriood.getPerioodiMiniimaalneHind().getHind()));
+        elektrihindKeskminePeriood.setText(String.valueOf(elekterPeriood.getPerioodiKeskmineHind()));
 
 
     }

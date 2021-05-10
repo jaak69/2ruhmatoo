@@ -109,7 +109,7 @@
                      <items>
                         <FXCollections fx:factory="observableArrayList">
                            <String fx:value="JAANUAR" />
-                           <String fx:value="VEEBRUAE" />
+                           <String fx:value="VEEBRUAR" />
                            <String fx:value="MÄRTS" />
                            <String fx:value="APRILL" />
                            <String fx:value="MAI" />
