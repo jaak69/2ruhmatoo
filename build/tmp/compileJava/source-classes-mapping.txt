@@ -2,8 +2,8 @@ Main.java
  Main
 ElektriHindPaev.java
  ElektriHindPaev
-Paevahind.java
- Paevahind
+Test.java
+ Test
 Elektrihind.java
  Elektrihind
 Controller.java
@@ -12,7 +12,7 @@ EleringJsonApi.java
  EleringJsonApi
 KuvaElektriHind.java
  KuvaElektriHind
+Paevahind.java
+ Paevahind
 PerioodiHind.java
  PerioodiHind
-Test.java
- Test

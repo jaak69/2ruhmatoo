@@ -57,7 +57,6 @@ public class KuvaElektriHind {
 
     private double leiaKeskmine (){
         double summa = 0.0;
-        //int pikkus;
         for (int i = 0; i <elektrihind.size();i++){
             summa += elektrihind.get(i).getHind();
         }
