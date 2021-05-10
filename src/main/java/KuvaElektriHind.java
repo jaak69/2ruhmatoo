@@ -76,10 +76,26 @@ public class KuvaElektriHind {
 
     private void loeJsonKuu (JSONObject statesJson, String riik){
         JSONArray dataRiik = (JSONArray) statesJson.get(riik);
-        String testPäev = "0000-00-00";
+        JSONObject tunniInfo = (JSONObject) dataRiik.get(0);
+        String algusPäev = kuupäevTimestampist((Long) tunniInfo.get("timestamp"));
+        String testPäev;
+        double päevaKeskmine = 0.0;
+        double päevaMaksimum = 0.0;
+        double päevaMiinimum = 0.0;
         for (int i = 0; i < dataRiik.size(); i++){
-            JSONObject tunniInfo = (JSONObject) dataRiik.get(i);
+            tunniInfo = (JSONObject) dataRiik.get(i);
             testPäev = kuupäevTimestampist((Long) tunniInfo.get("timestamp"));
+            if (!testPäev.equals(algusPäev)){
+                algusPäev = testPäev;
+                päevaKeskmine = leiaKeskmine();
+                //päevaMaksimum = topUp(1).;
+                //päevaMiinimum = topDown(1);
+
+            }
+            String aeg = tunnidTimestampist((Long) tunniInfo.get("timestamp"));
+            double hind = Math.round(((double) tunniInfo.get("price"))/10.0*100)/100.0;
+            Elektrihind tunnihind = new Elektrihind(aeg,hind);
+            elektrihind.add(tunnihind);
         }
 
 

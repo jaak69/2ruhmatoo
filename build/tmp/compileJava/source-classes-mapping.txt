@@ -2,17 +2,17 @@ Main.java
  Main
 KuvaElektriHind.java
  KuvaElektriHind
-ElektriHindPäev.java
- ElektriHindPäev
-PerioodiHind.java
- PerioodiHind
-Elektrihind.java
- Elektrihind
-EleringJsonApi.java
- EleringJsonApi
 Paevahind.java
  Paevahind
+PerioodiHind.java
+ PerioodiHind
+EleringJsonApi.java
+ EleringJsonApi
+Elektrihind.java
+ Elektrihind
 Controller.java
  Controller
 Test.java
  Test
+ElektriHindPäev.java
+ ElektriHindPäev
