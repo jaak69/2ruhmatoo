@@ -10,52 +10,56 @@ import org.json.simple.parser.ParseException;
 
 import java.io.*;
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.Month;
+import java.time.format.TextStyle;
 import java.util.*;
 
 public class Controller implements Initializable {
 
+    @FXML
     private String valitudRiik;
 
     @FXML
-    public ToggleButton paevahind;
+    private ToggleButton paevahind;
     @FXML
-    public ToggleButton valikuhind;
+    private ToggleButton valikuhind;
     @FXML
-    public Button lopeta;
+    private Button lopeta;
     @FXML
-    public ComboBox riikValik;
+    private ComboBox riikValik;
     @FXML
-    public DatePicker lopuKuupaev;
+    private DatePicker lopuKuupaev;
     @FXML
-    public DatePicker algusKuupaev;
+    private DatePicker algusKuupaev;
     @FXML
-    public Button paringUuteAndmetega;
+    private Button paringUuteAndmetega;
     @FXML
-    public Button SalvestaCsv;
+    private Button SalvestaCsv;
     @FXML
-    public TableView<Elektrihind> tabelElektrihinnad;
+    private TableView<Elektrihind> tabelElektrihinnad;
     @FXML
-    public TableColumn tabelKuupäev;
+    private TableColumn tabelKuupäev;
     @FXML
-    public TableColumn tabelKõrgeimHind;
+    private TableColumn tabelKõrgeimHind;
     @FXML
-    public TableColumn tabelMadalaimHind;
+    private TableColumn tabelMadalaimHind;
     @FXML
-    public TableColumn tabelKeskmineHind;
+    private TableColumn tabelKeskmineHind;
     @FXML
-    public TextField elektrihindMaxPeriood;
+    private TextField elektrihindMaxPeriood;
     @FXML
-    public TextField elektrihimdMinPeriood;
+    private TextField elektrihimdMinPeriood;
     @FXML
-    public TextField elektrihindKeskminePeriood;
+    private TextField elektrihindKeskminePeriood;
+    @FXML
+    private ComboBox valiKuu;
+    @FXML
+    private ComboBox valiAasta;
 
     @FXML
     private Label lblOutput;
 
-    @FXML
-    public void sayHello() {
-        lblOutput.setText("Hello FXML!");
-    }
     @FXML
     public void päevahindKuva(ActionEvent actionEvent) {
         try {
@@ -68,6 +72,7 @@ public class Controller implements Initializable {
     }
     @FXML
     public void valikuhindKuva(ActionEvent actionEvent) {
+        showValitudPeriood((String)riikValik.getValue(),(String)valiKuu.getValue(),(String)valiAasta.getValue());
     }
     @FXML
     public void lopetaProgramm(ActionEvent actionEvent) {
@@ -109,7 +114,7 @@ public class Controller implements Initializable {
         File file = fileChooser.showSaveDialog(tabelElektrihinnad.getScene().getWindow());
 
         try {
-            writeCSV(file);
+            writeCSV(tabelElektrihinnad,file);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -126,8 +131,8 @@ public class Controller implements Initializable {
         paevahind.setSelected(true);
 
         //peida kuupäeva valikud
-        algusKuupaev.setVisible(false);
-        lopuKuupaev.setVisible(false);
+        valiKuu.setVisible(false);
+        valiAasta.setVisible(false);
 
         //Tõmba eleringist hetkest kuni 24H homseni
         Paevahind elektriHinnad = new Paevahind(valitudRiik.toLowerCase(Locale.ROOT));
@@ -153,39 +158,63 @@ public class Controller implements Initializable {
         }
 
         //Ülemises ringid paika
-        elektrihindMaxPeriood.setText(String.valueOf(elektriHinnad.maksimaalneHind()));
-        elektrihimdMinPeriood.setText(String.valueOf(elektriHinnad.minimaalneHind()));
+        elektrihindMaxPeriood.setText(String.valueOf(elektriHinnad.maksimaalneHind().getHind()));
+        elektrihimdMinPeriood.setText(String.valueOf(elektriHinnad.minimaalneHind().getHind()));
         elektrihindKeskminePeriood.setText(String.valueOf(elektriHinnad.keskmineHind()));
     }
 
-    public void writeCSV(File file) throws Exception {
+    public void showValitudPeriood(String vRiik, String vKuu, String vAasta){
+
+        //seadista vahemiku valik aktiivseks, kui on aktiivne
+        if (paevahind.isSelected()){
+            paevahind.setSelected(false);
+        }
+
+        //päevavaliku menüünupp aktiivseks
+        valikuhind.setSelected(true);
+
+        valiKuu.setVisible(true);
+        valiAasta.setVisible(true);
+
+        //Tõmba eleringist hetkest kuni 24H homseni
+         PerioodiHind elektriHinnad = new PerioodiHind(valitudRiik.toLowerCase(Locale.ROOT),Integer.parseInt(vKuu),
+                 Integer.parseInt(vAasta));
+        try {
+            List<ElektriHindPaev> elekter24h = elektriHinnad.getPerioodiHinnad();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        //Tühjenda tabel
+        tabelElektrihinnad.getItems().clear();
+        tabelElektrihinnad.getColumns().clear();
+
+
+    }
+
+    public void writeCSV(TableView<Elektrihind> tabelElektrihinnad, File file) throws Exception {
         Writer writer = null;
         try {
-           
             writer = new BufferedWriter(new FileWriter(file));
-            String rows = null;
-            for (int row = 0; row < tabelElektrihinnad.getItems().size(); row++) {
 
-                ObservableList cells = (ObservableList) tabelElektrihinnad.getItems().get(row);
-                String temp = null;
-                for (int column = 0; column < cells.size(); column++) {
+            ObservableList<Elektrihind> cells = tabelElektrihinnad.getItems();
 
-                    if (column == 0) {
-                        temp = (String) cells.get(column) + ";";
-                    } else if (column == cells.size() - 1) {
-                        temp = temp + cells.get(column) + "\n";
-                    } else {
-                        temp = temp + cells.get(column) + ";";
-                    }
-                }
-                rows = rows + temp;
+            for (Elektrihind hind : cells) {
+                writer.write(hind.toString());
             }
-            writer.write(rows);
+
+            Alert salvestatud = new Alert(Alert.AlertType.INFORMATION);
+            salvestatud.setHeaderText("Fail salvestatud!");
+            salvestatud.show();
+
         } catch (Exception ex) {
-            ex.printStackTrace();
+            Alert salvestatud = new Alert(Alert.AlertType.WARNING);
+            salvestatud.setHeaderText("Faili salvestamine ebaõnnestus!");
+            salvestatud.show();
         }
         finally {
-
             writer.flush();
             writer.close();
         }
@@ -193,6 +222,9 @@ public class Controller implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
+        valiKuu.getSelectionModel().select(Month.from(LocalDate.now()).getDisplayName(TextStyle.FULL_STANDALONE,
+                new Locale("et","EE")).toUpperCase());
 
         valitudRiik = (String) riikValik.getValue();
 

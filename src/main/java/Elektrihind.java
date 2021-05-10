@@ -28,10 +28,7 @@ public class Elektrihind implements Comparable<Elektrihind>{
 
     @Override
     public String toString() {
-        return "Elektrihind{" +
-                "aeg='" + aeg + '\'' +
-                ", hind=" + hind +
-                '}';
+        return aeg + ";" + hind + "\n";
     }
 
     @Override
