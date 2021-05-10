@@ -21,6 +21,7 @@ public class Paevahind {
         this.riik = riik;
     }
 
+    //
     public List<Elektrihind> getPäevaHinnad() throws IOException, ParseException {
         List<Elektrihind> paevaHinnad = new ArrayList<>();
         teeEttevalmistus();
