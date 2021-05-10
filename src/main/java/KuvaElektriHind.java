@@ -10,7 +10,9 @@ import java.util.List;
 public class KuvaElektriHind {
     private ArrayList<Elektrihind> elektrihind = new ArrayList<>();
     private ArrayList<Elektrihind> tipud = new ArrayList<>();
+    private ArrayList<Elektrihind> perioodiTipud = new ArrayList<>();
     private ArrayList<Elektrihind> põhjad = new ArrayList<>();
+    private ArrayList<Elektrihind> perioodiPõhjad = new ArrayList<>();
     private ArrayList<ElektriHindPaev> paevadeHinnad = new ArrayList<>();
     private ArrayList<Elektrihind> minHindadeList = new ArrayList<>();
     private ArrayList<Elektrihind> maxHinddadeList = new ArrayList<>();
@@ -33,26 +35,34 @@ public class KuvaElektriHind {
         põhjad.clear();
     }
 
-    private ArrayList<Elektrihind> topUp (int n){
-        Collections.sort(elektrihind, Collections.reverseOrder());
-        if (n > elektrihind.size()){
-            n = elektrihind.size();
-        }
-        for (int i = 0; i < n; i++){
-            tipud.add(elektrihind.get(i));
-        }
-        return tipud;
+    private void nulliPerioodiListid(){
+        paevadeHinnad.clear();
+        minHindadeList.clear();
+        maxHinddadeList.clear();
+        perioodiTipud.clear();
+        perioodiPõhjad.clear();
     }
 
-    private ArrayList<Elektrihind> topDown (int n){
-        Collections.sort(elektrihind);
-        if (n > elektrihind.size()){
-            n = elektrihind.size();
+    private ArrayList<Elektrihind> topUp (int n, ArrayList<Elektrihind> hindadeList, ArrayList<Elektrihind> tiputabel){
+        Collections.sort(hindadeList, Collections.reverseOrder());
+        if (n > hindadeList.size()){
+            n = hindadeList.size();
         }
         for (int i = 0; i < n; i++){
-            põhjad.add(elektrihind.get(i));
+            tiputabel.add(hindadeList.get(i));
         }
-        return põhjad;
+        return tiputabel;
+    }
+
+    private ArrayList<Elektrihind> topDown (int n, ArrayList<Elektrihind> hindadeList, ArrayList<Elektrihind> põhjatabel){
+        Collections.sort(hindadeList);
+        if (n > hindadeList.size()){
+            n = hindadeList.size();
+        }
+        for (int i = 0; i < n; i++){
+            põhjatabel.add(hindadeList.get(i));
+        }
+        return põhjatabel;
     }
 
     private double leiaKeskmine (){
@@ -87,8 +97,10 @@ public class KuvaElektriHind {
             testPäev = kuupäevTimestampist((Long) tunniInfo.get("timestamp"));
             if (!testPäev.equals(algusPäev) || (i == dataRiik.size() - 2)){
                 päevaKeskmine = leiaKeskmine();
-                päevaMaksimum = topUp(1).get(0).getHind();
-                päevaMiinimum = topDown(1).get(0).getHind();
+                päevaMaksimum = topUp(1,elektrihind,tipud).get(0).getHind();
+                maxHinddadeList.add(topUp(1,elektrihind,tipud).get(0));
+                päevaMiinimum = topDown(1,elektrihind,põhjad).get(0).getHind();
+                minHindadeList.add(topDown(1,elektrihind,põhjad).get(0));
                 ElektriHindPaev uksPaev = new ElektriHindPaev(algusPäev,päevaKeskmine,päevaMaksimum,päevaMiinimum);
                 paevadeHinnad.add(uksPaev);
                 nulliListid();
@@ -106,6 +118,12 @@ public class KuvaElektriHind {
         loeJson(statesJson, riik);
     }
 
+    private void teeEttevalmistusPeriood (JSONObject statesJson, String riik){
+        nulliListid();
+        nulliPerioodiListid();
+        loeJsonKuu(statesJson, riik);
+    }
+
     public double leiaKeskmised (JSONObject statesJson, String riik){
         teeEttevalmistus(statesJson,riik);
         return leiaKeskmine();
@@ -113,13 +131,13 @@ public class KuvaElektriHind {
 
     public Elektrihind leiaMaxHind (JSONObject statesJson, String riik){
         teeEttevalmistus(statesJson,riik);
-        topUp(1);
+        topUp(1,elektrihind,tipud);
         return tipud.get(0);
     }
 
     public Elektrihind leiaMinHind (JSONObject statesJson, String riik){
         teeEttevalmistus(statesJson,riik);
-        topDown(1);
+        topDown(1,elektrihind,põhjad);
         return põhjad.get(0);
     }
 
@@ -128,11 +146,21 @@ public class KuvaElektriHind {
         return elektrihind;
     }
 
-    public List<ElektriHindPaev> leiaPaevadeHinnad (JSONObject statesJson, String riik){
-        nulliListid();
-        paevadeHinnad.clear();
-        loeJsonKuu(statesJson, riik);
+    public List<ElektriHindPaev> leiaPerioodiHinnad (JSONObject statesJson, String riik){
+        teeEttevalmistusPeriood(statesJson,riik);
         return paevadeHinnad;
+    }
+
+    public Elektrihind leiaPerioodiMaxHind (JSONObject statesJson, String riik){
+        teeEttevalmistusPeriood(statesJson,riik);
+        topUp(1,maxHinddadeList,perioodiTipud);
+        return perioodiTipud.get(0);
+    }
+
+    public Elektrihind leiaPerioodiMinHind (JSONObject statesJson, String riik){
+        teeEttevalmistusPeriood(statesJson,riik);
+        topDown(1,minHindadeList,perioodiPõhjad);
+        return perioodiPõhjad.get(0);
     }
 
 }
