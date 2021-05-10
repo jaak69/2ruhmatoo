@@ -1,4 +1,5 @@
 import javafx.application.Platform;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -7,8 +8,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.FileChooser;
 import org.json.simple.parser.ParseException;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
 import java.util.*;
 
@@ -99,15 +99,20 @@ public class Controller implements Initializable {
 
     }
     @FXML
-    public void salvestaCSVFail(ActionEvent actionEvent) {
+    public void salvestaCSVFail(ActionEvent actionEvent)  {
         FileChooser fileChooser = new FileChooser();
         //Set extension filter for text files
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv");
         fileChooser.getExtensionFilters().add(extFilter);
 
         //Show save file dialog
-        File file = fileChooser.showSaveDialog(null);
+        File file = fileChooser.showSaveDialog(tabelElektrihinnad.getScene().getWindow());
 
+        try {
+            writeCSV(file);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -151,6 +156,39 @@ public class Controller implements Initializable {
         elektrihindMaxPeriood.setText(String.valueOf(elektriHinnad.maksimaalneHind()));
         elektrihimdMinPeriood.setText(String.valueOf(elektriHinnad.minimaalneHind()));
         elektrihindKeskminePeriood.setText(String.valueOf(elektriHinnad.keskmineHind()));
+    }
+
+    public void writeCSV(File file) throws Exception {
+        Writer writer = null;
+        try {
+           
+            writer = new BufferedWriter(new FileWriter(file));
+            String rows = null;
+            for (int row = 0; row < tabelElektrihinnad.getItems().size(); row++) {
+
+                ObservableList<Elektrihind> cells = (ObservableList) tabelElektrihinnad.getItems().get(row);
+                String temp = null;
+                for (int column = 0; column < cells.size(); column++) {
+
+                    if (column == 0) {
+                        temp = (String) cells.get(column) + ";";
+                    } else if (column == cells.size() - 1) {
+                        temp = temp + cells.get(column) + "\n";
+                    } else {
+                        temp = temp + cells.get(column) + ";";
+                    }
+                }
+                rows = rows + temp;
+            }
+            writer.write(rows);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        finally {
+
+            writer.flush();
+            writer.close();
+        }
     }
 
     @Override
