@@ -6,12 +6,12 @@ KuvaElektriHind.java
  KuvaElektriHind
 Paevahind.java
  Paevahind
-PerioodiHind.java
- PerioodiHind
-EleringJsonApi.java
- EleringJsonApi
 Elektrihind.java
  Elektrihind
+EleringJsonApi.java
+ EleringJsonApi
+PerioodiHind.java
+ PerioodiHind
 Controller.java
  Controller
 Test.java
