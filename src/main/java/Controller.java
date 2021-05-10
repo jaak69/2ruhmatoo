@@ -39,7 +39,7 @@ public class Controller implements Initializable {
     @FXML
     private TableView<Elektrihind> tabelElektrihinnad;
     @FXML
-    private TableView tabelElektrihinnadPeriood;
+    private TableView<ElektriHindPaev> tabelElektrihinnadPeriood;
     @FXML
     private TableColumn tabelKuupäev;
     @FXML
@@ -74,7 +74,13 @@ public class Controller implements Initializable {
     }
     @FXML
     public void valikuhindKuva(ActionEvent actionEvent) {
-        showValitudPeriood((String)riikValik.getValue(),(String)valiKuu.getValue(),(String)valiAasta.getValue());
+        try {
+            showValitudPeriood((String)riikValik.getValue(),(String)valiKuu.getValue(),(String)valiAasta.getValue());
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
     @FXML
     public void lopetaProgramm(ActionEvent actionEvent) {
@@ -97,6 +103,14 @@ public class Controller implements Initializable {
         if (paevahind.isSelected()){
             try {
                 showPäevahind((String) riikValik.getValue());
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        } else if (valikuhind.isSelected()){
+            try {
+                showValitudPeriood((String)riikValik.getValue(),(String)valiKuu.getValue(),(String)valiAasta.getValue());
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (ParseException e) {
@@ -132,6 +146,8 @@ public class Controller implements Initializable {
         if (tabelElektrihinnadPeriood.isVisible()){
             tabelElektrihinnadPeriood.setVisible(false);
         }
+
+        tabelElektrihinnad.setVisible(true);
 
         //päevavaliku menüünupp aktiivseks
         paevahind.setSelected(true);
@@ -169,10 +185,26 @@ public class Controller implements Initializable {
         elektrihindKeskminePeriood.setText(String.valueOf(elektriHinnad.keskmineHind()));
     }
 
-    public void showValitudPeriood(String vRiik, String vKuu, String vAasta){
+    public void showValitudPeriood(String vRiik, String vKuu, String vAasta) throws IOException, ParseException {
+        //Kuude nimetused numbriteks
+
+        Map<String,Integer> kuudNumbriteks = new HashMap<>();
+        kuudNumbriteks.put("JAANUAR",1);
+        kuudNumbriteks.put("VEEBRUAR",2);
+        kuudNumbriteks.put("MÄRTS",3);
+        kuudNumbriteks.put("APRILL",4);
+        kuudNumbriteks.put("MAI",5);
+        kuudNumbriteks.put("JUUNI",6);
+        kuudNumbriteks.put("JUULI",7);
+        kuudNumbriteks.put("AUGUST",8);
+        kuudNumbriteks.put("SEPTEMBER",9);
+        kuudNumbriteks.put("OKTOOBER",10);
+        kuudNumbriteks.put("NOVEMBER",11);
+        kuudNumbriteks.put("DETSEMBER",12);
+
 
         //seadista vahemiku valik aktiivseks, kui on aktiivne
-        if (paevahind.isSelected()){
+        if (paevahind.isSelected()) {
             paevahind.setSelected(false);
         }
 
@@ -182,20 +214,23 @@ public class Controller implements Initializable {
         valiKuu.setVisible(true);
         valiAasta.setVisible(true);
 
-        //Tõmba eleringist hetkest kuni 24H homseni
-         PerioodiHind elektriHinnad = new PerioodiHind(valitudRiik.toLowerCase(Locale.ROOT),Integer.parseInt(vKuu),
-                 Integer.parseInt(vAasta));
-        try {
-            List<ElektriHindPaev> elekter24h = elektriHinnad.getPerioodiHinnad();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
-            e.printStackTrace();
+        //deaktiveeri päevahinnatabel ja aktiveeri perioodi tabel
+        if (tabelElektrihinnad.isVisible()) {
+            tabelElektrihinnad.setVisible(false);
         }
 
+        if (!tabelElektrihinnadPeriood.isVisible()) {
+            tabelElektrihinnadPeriood.setVisible(true);
+        }
+
+        //Tõmba eleringist hetkest kuni 24H homseni
+        PerioodiHind elekterPeriood = new PerioodiHind(valitudRiik.toLowerCase(Locale.ROOT), kuudNumbriteks.get(vKuu),
+                Integer.parseInt(vAasta));
+        List<ElektriHindPaev> elekter = elekterPeriood.getPerioodiHinnad();
+
         //Tühjenda tabel
-        tabelElektrihinnad.getItems().clear();
-        tabelElektrihinnad.getColumns().clear();
+        tabelElektrihinnadPeriood.getItems().clear();
+        tabelElektrihinnadPeriood.getColumns().clear();
 
         //tabeli päise defineerimine
         TableColumn<ElektriHindPaev, String> kuupaevColumn = new TableColumn<>("Kuupäev");
@@ -204,15 +239,26 @@ public class Controller implements Initializable {
         TableColumn<ElektriHindPaev, String> minHindColumn = new TableColumn<>("MinHind");
         minHindColumn.setCellValueFactory(new PropertyValueFactory<>("minHind"));
 
-        TableColumn<ElektriHindPaev, String> maxHindColumn = new TableColumn<>("MinHind");
+        TableColumn<ElektriHindPaev, String> maxHindColumn = new TableColumn<>("MaxHind");
         maxHindColumn.setCellValueFactory(new PropertyValueFactory<>("maxHind"));
 
-        TableColumn<ElektriHindPaev, String> keskmineHindColumn = new TableColumn<>("MinHind");
+        TableColumn<ElektriHindPaev, String> keskmineHindColumn = new TableColumn<>("KeskmineHind");
         keskmineHindColumn.setCellValueFactory(new PropertyValueFactory<>("hind"));
 
-//        tabelElektrihinnad.getColumns().add(kuupaevColumn);
-//        tabelElektrihinnad.getColumns().add(minHindColumn);
-//        tabelElektrihinnad.getColumns().add(minHindColumn);
+        tabelElektrihinnadPeriood.getColumns().add(kuupaevColumn);
+        tabelElektrihinnadPeriood.getColumns().add(minHindColumn);
+        tabelElektrihinnadPeriood.getColumns().add(maxHindColumn);
+        tabelElektrihinnadPeriood.getColumns().add(keskmineHindColumn);
+
+        //Andmete lisamine tabelisse
+        for (ElektriHindPaev paev : elekter) {
+            tabelElektrihinnadPeriood.getItems().add(paev);
+        }
+
+        //Ülemises ringid paika
+        elektrihindMaxPeriood.setText(String.valueOf(elekterPeriood.getPerioodiMax()));
+//        elektrihimdMinPeriood.setText(String.valueOf(elekterPeriood.get));
+//        elektrihindKeskminePeriood.setText(String.valueOf(elektriHinnad.keskmineHind()));
 
 
     }
