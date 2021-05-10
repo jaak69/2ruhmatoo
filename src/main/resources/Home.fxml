@@ -52,11 +52,6 @@
                   <Blend />
                </effect>
             </ToggleButton>
-            <Button layoutX="10.0" layoutY="60.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="223.0" text="Button">
-               <font>
-                  <Font size="18.0" />
-               </font>
-            </Button>
             <Button fx:id="lopeta" layoutX="10.0" layoutY="110.0" mnemonicParsing="false" onAction="#lopetaProgramm" prefHeight="50.0" prefWidth="223.0" text="Lõpeta">
                <font>
                   <Font size="18.0" />
