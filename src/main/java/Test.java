@@ -9,13 +9,10 @@ public class Test {
         String algus = "2021-05-01";
         String riigiTähis = "ee";
 
-        System.out.println("Alustan");
-
-        //List<Elektrihind> paevaHinnad = new ArrayList<>();
         Paevahind paevahind = new Paevahind(riigiTähis);
-        System.out.println(paevahind.getPäevaHinnad());
-
-
-        //System.out.println(päevahind.getMaxHind());
+        System.out.println("Tundide hinnad " + paevahind.getPäevaHinnad());
+        System.out.println("Keskmine hind " + paevahind.keskmineHind());
+        System.out.println("Max hind " + paevahind.maksimaalneHind());
+        System.out.println("Min hind " + paevahind.minimaalneHind());
     }
 }

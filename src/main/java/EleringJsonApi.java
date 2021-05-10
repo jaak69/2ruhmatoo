@@ -38,7 +38,7 @@ public class EleringJsonApi {
         String urlString;
         urlString =
                 this.baseUrl + this.restEndPoint + "?" + "start=" + URLEncoder.encode(this.start) + "&end=" + URLEncoder.encode(this.end);
-        System.out.println(urlString);
+        //System.out.println(urlString);
         try{
             this.url = new URL(urlString);
         }catch (MalformedURLException e) {
