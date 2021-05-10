@@ -13,27 +13,11 @@ public class Paevahind {
     private String perioodiLõpp;
     private Elektrihind minHind = new Elektrihind();
     private Elektrihind maxHind = new Elektrihind();
-    private int keskmineHind;
     private JSONObject data;
     private String restEndPoint = "/api/nps/price";
     DateTimeFormatter dtformat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:00");
 
-    /*public Paevahind(String riik, String perioodiAlgus, String perioodiLõpp, int minHind, int maxHind, int keskmineHind, JSONObject data, String restEndPoint) {
-        this.riik = riik;
-        this.perioodiAlgus = perioodiAlgus;
-        this.perioodiLõpp = perioodiLõpp;
-        this.keskmineHind = keskmineHind;
-        this.data = data;
-        this.restEndPoint = restEndPoint;
-    }
-
-     */
-
     public Paevahind(String riik) {
-        this.riik = riik;
-    }
-
-    public void setRiik(String riik) {
         this.riik = riik;
     }
 

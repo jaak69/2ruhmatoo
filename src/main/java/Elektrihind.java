@@ -14,16 +14,8 @@ public class Elektrihind implements Comparable<Elektrihind>{
         return aeg;
     }
 
-    public void setAeg(String aeg) {
-        this.aeg = aeg;
-    }
-
     public double getHind() {
         return hind;
-    }
-
-    public void setHind(double hind) {
-        this.hind = hind;
     }
 
     @Override
