@@ -3,6 +3,9 @@ import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -17,7 +20,7 @@ public class Paevahind {
     private List<Elektrihind> elektriHinnad;
     private JSONObject data;
     private String restEndPoint = "/api/nps/price";
-    SimpleDateFormat sdformat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+    DateTimeFormatter dtformat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:00");
 
     public Paevahind(String riik, String perioodiAlgus, String perioodiLõpp, int minHind, int maxHind, int keskmineHind, List<Elektrihind> elektriHinnad, JSONObject data, String restEndPoint) {
         this.riik = riik;
@@ -64,8 +67,9 @@ public class Paevahind {
     }
 
     private void leiaAeg (){
-        perioodiAlgus = sdformat.format(new Date((System.currentTimeMillis())));
-        perioodiLõpp = sdformat.format(new Date((System.currentTimeMillis() + 24*60*60*1000)));
+        LocalDateTime hetkeAeg = LocalDateTime.now().plusHours(-3);
+        perioodiAlgus = dtformat.format(hetkeAeg);
+        perioodiLõpp = dtformat.format(hetkeAeg.plusDays(1));
     }
 
     private void teeEttevalmistus () throws IOException, ParseException {

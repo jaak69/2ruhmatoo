@@ -21,6 +21,10 @@ public class KuvaElektriHind {
         return new SimpleDateFormat("dd-MM-yyyy HH:mm").format(new Date((timestamp)*1000L));
     }
 
+    private String kuupäevTimestampist (Long timestamp){
+        return new SimpleDateFormat("dd-MM-yyyy").format(new Date((timestamp)*1000L));
+    }
+
     private void nulliListid(){
         elektrihind.clear();
         päevadeHinnad.clear();
@@ -72,10 +76,13 @@ public class KuvaElektriHind {
 
     private void loeJsonKuu (JSONObject statesJson, String riik){
         JSONArray dataRiik = (JSONArray) statesJson.get(riik);
-        //for (int i = 0; i < dataRiik.size(); i++){
-            //if (i // 24){
+        String testPäev = "0000-00-00";
+        for (int i = 0; i < dataRiik.size(); i++){
+            JSONObject tunniInfo = (JSONObject) dataRiik.get(i);
+            testPäev = kuupäevTimestampist((Long) tunniInfo.get("timestamp"));
+        }
 
-        //}
+
     }
 
     private void teeEttevalmistus (JSONObject statesJson, String riik){
