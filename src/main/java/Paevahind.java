@@ -2,7 +2,9 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
-import java.time.LocalDate;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class Paevahind {
@@ -15,11 +17,12 @@ public class Paevahind {
     private List<Elektrihind> elektriHinnad;
     private JSONObject data;
     private String restEndPoint = "/api/nps/price";
+    SimpleDateFormat sdformat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
-    /*public Päevahind(String riik, String perioodiAlgus, String perioodiLõpp, int minHind, int maxHind, int keskmineHind, List<Elektrihind> elektriHinnad, String restEndPoint) {
+    public Paevahind(String riik, String perioodiAlgus, String perioodiLõpp, int minHind, int maxHind, int keskmineHind, List<Elektrihind> elektriHinnad, JSONObject data, String restEndPoint) {
         this.riik = riik;
-        this.perioodiAlgus = perioodiAlgus + " 00:00";
-        this.perioodiLõpp = perioodiLõpp + " 23:59";
+        this.perioodiAlgus = perioodiAlgus;
+        this.perioodiLõpp = perioodiLõpp;
         this.minHind = minHind;
         this.maxHind = maxHind;
         this.keskmineHind = keskmineHind;
@@ -28,51 +31,32 @@ public class Paevahind {
         this.restEndPoint = restEndPoint;
     }
 
-     */
+    public Paevahind(String riik) {
+        this.riik = riik;
+    }
 
     public void setRiik(String riik) {
         this.riik = riik;
     }
 
-    public void setPerioodiAlgus(String perioodiAlgus) {
-        this.perioodiAlgus = perioodiAlgus;
+    public List<Elektrihind> getPäevaHinnad() throws IOException, ParseException {
+        List<Elektrihind> paevaHinnad = new ArrayList<>();
+        leiaAeg();
+        EleringJsonApi eleringData = new EleringJsonApi(restEndPoint);
+        KuvaElektriHind kuvaElektriHind = new KuvaElektriHind();
+        eleringData.setStart(perioodiAlgus);
+        eleringData.setEnd(perioodiLõpp);
+        data = eleringData.getEleringData();
+        System.out.println(kuvaElektriHind.leiaKeskmised(data,riik));
+
+
+
+        return paevaHinnad;
     }
 
-    public void setPerioodiLõpp(String perioodiLõpp) {
-        this.perioodiLõpp = perioodiLõpp;
+    private void leiaAeg (){
+        perioodiAlgus = sdformat.format(new Date((System.currentTimeMillis())));
+        perioodiLõpp = sdformat.format(new Date((System.currentTimeMillis() + 24*60*60*1000)));
     }
-
-    public int getMinHind() {
-        return minHind;
-    }
-
-    public int getMaxHind() {
-        return maxHind;
-    }
-
-    public int getKeskmineHind() {
-        return keskmineHind;
-    }
-
-    public List<Elektrihind> getElektriHinnad(){
-        /*EleringJsonApi eleringJsonData = new EleringJsonApi(restEndPoint);
-        KuvaElektriHind elektriHind = new KuvaElektriHind();
-        eleringJsonData.setStart(perioodiAlgus);
-        eleringJsonData.setEnd(perioodiLõpp);
-        data = eleringJsonData.getEleringData();
-        elektriHind.leiaMinMaxKeskm((JSONObject) data.get("data"), riik);
-         */
-        return elektriHinnad;
-    }
-
-    public void arvutaElektriHinnad() throws IOException, ParseException {
-        EleringJsonApi eleringJsonData = new EleringJsonApi(restEndPoint);
-        KuvaElektriHind elektriHind = new KuvaElektriHind();
-        eleringJsonData.setStart(perioodiAlgus);
-        eleringJsonData.setEnd(perioodiLõpp);
-        data = eleringJsonData.getEleringData();
-        elektriHind.leiaMinMaxKeskm((JSONObject) data.get("data"), riik);
-    }
-
-
 }
+
