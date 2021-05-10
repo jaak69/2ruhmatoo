@@ -59,6 +59,7 @@ public class KuvaElektriHind {
 
     private void loeJson(JSONObject statesJson, String riik){
         System.out.println("võttan array'st välja riigi");
+        System.out.println(riik);
         JSONArray dataRiik = (JSONArray) statesJson.get(riik);
         System.out.println(dataRiik.size());
         System.out.println("Hakkan hakkima");
