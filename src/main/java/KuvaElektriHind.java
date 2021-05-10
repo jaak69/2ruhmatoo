@@ -16,6 +16,7 @@ public class KuvaElektriHind {
     private ArrayList<ElektriHindPaev> paevadeHinnad = new ArrayList<>();
     private ArrayList<Elektrihind> minHindadeList = new ArrayList<>();
     private ArrayList<Elektrihind> maxHinddadeList = new ArrayList<>();
+    private ArrayList<Elektrihind> perioodiHinnad = new ArrayList<>();
     /*private String minHind;
     private String maksHind;
     private String keskmineHind;
@@ -41,6 +42,7 @@ public class KuvaElektriHind {
         maxHinddadeList.clear();
         perioodiTipud.clear();
         perioodiPõhjad.clear();
+        perioodiHinnad.clear();
     }
 
     private ArrayList<Elektrihind> topUp (int n, ArrayList<Elektrihind> hindadeList, ArrayList<Elektrihind> tiputabel){
@@ -65,12 +67,12 @@ public class KuvaElektriHind {
         return põhjatabel;
     }
 
-    private double leiaKeskmine (){
+    private double leiaKeskmine (ArrayList<Elektrihind> hindadeList){
         double summa = 0.0;
-        for (int i = 0; i <elektrihind.size();i++){
-            summa += elektrihind.get(i).getHind();
+        for (int i = 0; i <hindadeList.size();i++){
+            summa += hindadeList.get(i).getHind();
         }
-        return Math.round(summa/ elektrihind.size()*100)/100.0;
+        return Math.round(summa/ hindadeList.size()*100)/100.0;
     }
 
     private void loeJson(JSONObject statesJson, String riik){
@@ -96,7 +98,7 @@ public class KuvaElektriHind {
             tunniInfo = (JSONObject) dataRiik.get(i);
             testPäev = kuupäevTimestampist((Long) tunniInfo.get("timestamp"));
             if (!testPäev.equals(algusPäev) || (i == dataRiik.size() - 2)){
-                päevaKeskmine = leiaKeskmine();
+                päevaKeskmine = leiaKeskmine(elektrihind);
                 päevaMaksimum = topUp(1,elektrihind,tipud).get(0).getHind();
                 maxHinddadeList.add(topUp(1,elektrihind,tipud).get(0));
                 päevaMiinimum = topDown(1,elektrihind,põhjad).get(0).getHind();
@@ -110,6 +112,7 @@ public class KuvaElektriHind {
             double hind = Math.round(((double) tunniInfo.get("price"))/10.0*100)/100.0;
             Elektrihind tunnihind = new Elektrihind(aeg,hind);
             elektrihind.add(tunnihind);
+            perioodiHinnad.add(tunnihind);
         }
     }
 
@@ -124,9 +127,9 @@ public class KuvaElektriHind {
         loeJsonKuu(statesJson, riik);
     }
 
-    public double leiaKeskmised (JSONObject statesJson, String riik){
+    public List<Elektrihind> leiaHinnad(JSONObject statesJson, String riik){
         teeEttevalmistus(statesJson,riik);
-        return leiaKeskmine();
+        return elektrihind;
     }
 
     public Elektrihind leiaMaxHind (JSONObject statesJson, String riik){
@@ -141,9 +144,9 @@ public class KuvaElektriHind {
         return põhjad.get(0);
     }
 
-    public List<Elektrihind> leiaHinnad(JSONObject statesJson, String riik){
+    public double leiaKeskmised (JSONObject statesJson, String riik){
         teeEttevalmistus(statesJson,riik);
-        return elektrihind;
+        return leiaKeskmine(elektrihind);
     }
 
     public List<ElektriHindPaev> leiaPerioodiHinnad (JSONObject statesJson, String riik){
@@ -163,4 +166,8 @@ public class KuvaElektriHind {
         return perioodiPõhjad.get(0);
     }
 
+    public double leiaPerioodiKeskmine (JSONObject statesJson, String riik) {
+        teeEttevalmistusPeriood(statesJson, riik);
+        return leiaKeskmine(perioodiHinnad);
+    }
 }

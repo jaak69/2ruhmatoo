@@ -17,8 +17,8 @@ public class PerioodiHind {
     private ElektriHindPaev elektriHinnad = new ElektriHindPaev();
     private JSONObject data;
     private String restEndPoint = "/api/nps/price";
-    DateTimeFormatter dtformatStart = DateTimeFormatter.ofPattern("yyyy-MM-dd 00:00");
-    DateTimeFormatter dtformatEnd = DateTimeFormatter.ofPattern("yyyy-MM-dd 23:59");
+    DateTimeFormatter dtformatStart = DateTimeFormatter.ofPattern("yyyy-MM-dd 22:00");
+    DateTimeFormatter dtformatEnd = DateTimeFormatter.ofPattern("yyyy-MM-dd 21:59");
 
     public PerioodiHind (String riik, int kuu, int aasta){
         this.riik = riik;
@@ -27,7 +27,7 @@ public class PerioodiHind {
     }
 
     private void leiaAeg(){
-        perioodiAlgus = dtformatStart.format(LocalDateTime.of(aasta,kuu,1,0,0));
+        perioodiAlgus = dtformatStart.format(LocalDateTime.of(aasta,kuu,1,0,0).plusDays(-1));
         perioodiLõpp = dtformatEnd.format(LocalDateTime.of(aasta,kuu,1,0,0).plusMonths(1).plusDays(-1));
     }
 
@@ -47,9 +47,21 @@ public class PerioodiHind {
         return elektriHinnad;
     }
 
-    public Elektrihind getPerioodiMax(){
-        Elektrihind perioodiMax = new Elektrihind();
-        return perioodiMax;
+    public Elektrihind getPerioodiMaksimaalneHind() throws IOException, ParseException {
+        teeEttevalmistus();
+        KuvaElektriHind kuvaElektriHind = new KuvaElektriHind();
+        return kuvaElektriHind.leiaPerioodiMaxHind((JSONObject) data.get("data"),riik);
     }
 
+    public Elektrihind getPerioodiMiniimaalneHind() throws IOException, ParseException {
+        teeEttevalmistus();
+        KuvaElektriHind kuvaElektriHind = new KuvaElektriHind();
+        return kuvaElektriHind.leiaPerioodiMinHind((JSONObject) data.get("data"),riik);
+    }
+
+    public double getPerioodiKeskmineHind() throws IOException, ParseException {
+        teeEttevalmistus();
+        KuvaElektriHind kuvaElektriHind = new KuvaElektriHind();
+        return kuvaElektriHind.leiaPerioodiKeskmine((JSONObject) data.get("data"),riik);
+    }
 }

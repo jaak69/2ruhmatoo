@@ -1,29 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.String?>
-<?import javafx.collections.FXCollections?>
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.Cursor?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.DatePicker?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.ToggleButton?>
-<?import javafx.scene.effect.Blend?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.shape.Circle?>
-<?import javafx.scene.text.Font?>
+<?import java.lang.*?>
+<?import javafx.collections.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller">
    <children>
       <VBox layoutY="1.0" prefHeight="700.0" prefWidth="222.0" style="-fx-background-color: #ccc;">
          <children>
@@ -36,7 +23,7 @@
                   </Label>
                </children>
             </Pane>
-            <ToggleButton fx:id="paevahind" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="50.0" selected="true" text="Päevahind">
+            <ToggleButton fx:id="paevahind" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="50.0" selected="true" text="Järgmised 24h">
                <font>
                   <Font size="18.0" />
                </font>
@@ -96,26 +83,37 @@
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                      </padding>
                   </ComboBox>
-                  <DatePicker fx:id="lopuKuupaev" promptText="Lõpukuupäev" GridPane.columnIndex="2">
-                     <padding>
-                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                     </padding>
-                  </DatePicker>
-                  <DatePicker fx:id="algusKuupaev" promptText="Alguskuupäev" showWeekNumbers="true" GridPane.columnIndex="1" GridPane.hgrow="SOMETIMES">
-                     <padding>
-                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                     </padding>
-                  </DatePicker>
-                  <Button fx:id="paringUuteAndmetega" mnemonicParsing="false" onAction="#kaivitaParingUuteAndmetega" prefHeight="37.0" prefWidth="96.0" text="Käivita" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                  <Button fx:id="paringUuteAndmetega" mnemonicParsing="false" onAction="#kaivitaParingUuteAndmetega" prefHeight="37.0" prefWidth="96.0" style="-fx-background-color: green;" text="Käivita" textFill="WHITE" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
                      <padding>
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                      </padding>
                   </Button>
-                  <Button fx:id="SalvestaCsv" layoutX="613.0" layoutY="29.0" mnemonicParsing="false" onAction="#salvestaCSVFail" prefHeight="37.0" prefWidth="73.0" text="CSV" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                  <Button fx:id="SalvestaCsv" layoutX="613.0" layoutY="29.0" mnemonicParsing="false" onAction="#salvestaCSVFail" prefHeight="37.0" prefWidth="73.0" text="Salvesta" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
                      <padding>
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                      </padding>
                   </Button>
+                  <ComboBox fx:id="valiKuu" prefWidth="150.0" promptText="Vali kuu" GridPane.columnIndex="1">
+                     <padding>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </padding>
+                  </ComboBox>
+                  <ComboBox fx:id="valiAasta" prefWidth="150.0" promptText="Vali aasta" GridPane.columnIndex="2">
+                     <items>
+                        <FXCollections fx:factory="observableArrayList">
+                           <String fx:value="2018" />
+                           <String fx:value="2019" />
+                           <String fx:value="2020" />
+                           <String fx:value="2021" />
+                        </FXCollections>
+                     </items>
+                     <padding>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </padding>
+                     <value>
+                        <String fx:value="2021" />
+                     </value>
+                  </ComboBox>
                </children>
             </GridPane>
             <TableView fx:id="tabelElektrihinnad" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="2">

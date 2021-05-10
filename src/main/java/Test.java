@@ -26,6 +26,8 @@ public class Test {
         System.out.println("1. kuupäeva min " + tabel.get(0).getMinHind());
         System.out.println("1. kuupäeva keskmine " + tabel.get(0).getHind());
         System.out.println("Viimane kuupäev " + tabel.get(tabel.size()-1).getAeg());
-
+        System.out.println("Uuritud kuu max hind " + perioodiHind.getPerioodiMaksimaalneHind());
+        System.out.println("Uuritud kuu min hind " + perioodiHind.getPerioodiMiniimaalneHind());
+        System.out.println("Uuritud kuu keskmine hind " + perioodiHind.getPerioodiKeskmineHind());
     }
 }
