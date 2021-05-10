@@ -21,7 +21,7 @@ public class Paevahind {
         this.riik = riik;
     }
 
-    //
+    // koostab päringu KuvaElektriHind klassile järgneva 24 tunni hindade listi saamiseks
     public List<Elektrihind> getPäevaHinnad() throws IOException, ParseException {
         List<Elektrihind> paevaHinnad = new ArrayList<>();
         teeEttevalmistus();
@@ -29,31 +29,37 @@ public class Paevahind {
         paevaHinnad = kuvaElektriHind.leiaHinnad((JSONObject) data.get("data"),riik);
         return paevaHinnad;
     }
-
+    // koostab päringu KuvaElektriHind klassile järgneva 24 tunni hindade keskmise saamiseks
     public double keskmineHind () throws IOException, ParseException {
         teeEttevalmistus();
         KuvaElektriHind kuvaElektriHind = new KuvaElektriHind();
         return kuvaElektriHind.leiaKeskmised((JSONObject) data.get("data"),riik);
     }
 
+    // koostab päringu KuvaElektriHind klassile järgneva 24 tunni kõrgeima hinna saamiseks
     public Elektrihind maksimaalneHind () throws IOException, ParseException {
         teeEttevalmistus();
         KuvaElektriHind kuvaElektriHind = new KuvaElektriHind();
         return kuvaElektriHind.leiaMaxHind((JSONObject) data.get("data"),riik);
     }
 
+    // koostab päringu KuvaElektriHind klassile järgneva 24 tunni madalaima hinna saamiseks
     public Elektrihind minimaalneHind () throws IOException, ParseException {
         teeEttevalmistus();
         KuvaElektriHind kuvaElektriHind = new KuvaElektriHind();
         return kuvaElektriHind.leiaMinHind((JSONObject) data.get("data"),riik);
     }
 
+    // arvestab hetke ajast päringu alguse ja 24 tundi edasi lõpu aja
+    // -3 tundi on vajalik Elering API ja LocalDateTime aja vahe kompenseerimiseks + 1h lisaks, et kuvada ka juba
+    // alanud tunni elektrihind
     private void leiaAeg (){
         LocalDateTime hetkeAeg = LocalDateTime.now().plusHours(-3);
         perioodiAlgus = dtformat.format(hetkeAeg);
         perioodiLõpp = dtformat.format(hetkeAeg.plusDays(1));
     }
 
+    // teostab päringute korduvad toimingud
     private void teeEttevalmistus () throws IOException, ParseException {
         leiaAeg();
         EleringJsonApi eleringData = new EleringJsonApi(restEndPoint);
