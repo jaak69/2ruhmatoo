@@ -1,7 +1,6 @@
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -12,7 +11,7 @@ public class KuvaElektriHind {
     private ArrayList<Elektrihind> elektrihind = new ArrayList<>();
     private ArrayList<Elektrihind> tipud = new ArrayList<>();
     private ArrayList<Elektrihind> põhjad = new ArrayList<>();
-    private ArrayList<ElektriHindPäev> päevadeHinnad = new ArrayList<>();
+    private ArrayList<ElektriHindPaev> paevadeHinnad = new ArrayList<>();
     private String minHind;
     private String maksHind;
     private String keskmineHind;
@@ -27,7 +26,7 @@ public class KuvaElektriHind {
 
     private void nulliListid(){
         elektrihind.clear();
-        päevadeHinnad.clear();
+        paevadeHinnad.clear();
         tipud.clear();
         põhjad.clear();
     }
@@ -128,8 +127,8 @@ public class KuvaElektriHind {
         return elektrihind;
     }
 
-    public List<ElektriHindPäev> leiaPaevadeHinnad (JSONObject statesJson, String riik){
-        List<ElektriHindPäev> päevadeHinnad = new ArrayList<>();
+    public List<ElektriHindPaev> leiaPaevadeHinnad (JSONObject statesJson, String riik){
+        List<ElektriHindPaev> päevadeHinnad = new ArrayList<>();
         nulliListid();
 
         return päevadeHinnad;
