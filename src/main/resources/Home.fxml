@@ -91,7 +91,7 @@
                            <String fx:value="EE" />
                            <String fx:value="LV" />
                            <String fx:value="LT" />
-                           <String fx:value="FIN" />
+                           <String fx:value="FI" />
                         </FXCollections>
                      </items>
                      <value>
