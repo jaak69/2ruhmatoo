@@ -26,32 +26,30 @@ public class PerioodiHind {
         this.aasta = aasta;
     }
 
-    public void setRiik(String riik) {
-        this.riik = riik;
+    private void leiaAeg(){
+        perioodiAlgus = dtformatStart.format(LocalDateTime.of(aasta,kuu,1,0,0));
+        perioodiLõpp = dtformatEnd.format(LocalDateTime.of(aasta,kuu,1,0,0).plusMonths(1).plusDays(-1));
     }
 
-    public void setKuu(int kuu) {
-        this.kuu = kuu;
-    }
-
-    public void setAasta(int aasta) {
-        this.aasta = aasta;
-    }
-
-    public List<ElektriHindPaev> getPerioodiHinnad() throws IOException, ParseException {
-        List<ElektriHindPaev> elektriHinnad = new ArrayList<>();
+    private void teeEttevalmistus() throws IOException, ParseException {
         leiaAeg();
         EleringJsonApi eleringData = new EleringJsonApi(restEndPoint);
         eleringData.setStart(perioodiAlgus);
         eleringData.setEnd(perioodiLõpp);
         data = eleringData.getEleringData();
+    }
+
+    public List<ElektriHindPaev> getPerioodiHinnad() throws IOException, ParseException {
+        List<ElektriHindPaev> elektriHinnad = new ArrayList<>();
+        teeEttevalmistus();
         KuvaElektriHind kuvaElektriHind = new KuvaElektriHind();
-        elektriHinnad = kuvaElektriHind.leiaPaevadeHinnad((JSONObject) data.get("data"),riik);
+        elektriHinnad = kuvaElektriHind.leiaPerioodiHinnad((JSONObject) data.get("data"),riik);
         return elektriHinnad;
     }
 
-    private void leiaAeg(){
-        perioodiAlgus = dtformatStart.format(LocalDateTime.of(aasta,kuu,1,0,0));
-        perioodiLõpp = dtformatEnd.format(LocalDateTime.of(aasta,kuu,1,0,0).plusMonths(1).plusDays(-1));
+    public Elektrihind getPerioodiMax(){
+        Elektrihind perioodiMax = new Elektrihind();
+        return perioodiMax;
     }
+
 }
