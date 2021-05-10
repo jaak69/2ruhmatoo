@@ -1,13 +1,13 @@
 Main.java
  Main
-EleringJsonApi.java
- EleringJsonApi
+Test.java
+ Test
 Controller.java
  Controller
 Elektrihind.java
  Elektrihind
-Test.java
- Test
+EleringJsonApi.java
+ EleringJsonApi
 KuvaElektriHind.java
  KuvaElektriHind
 Paevahind.java

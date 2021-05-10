@@ -51,21 +51,16 @@ public class KuvaElektriHind {
     private double leiaKeskmine (){
         double summa = 0.0;
         int pikkus;
-        for (int i = 0; i<elektrihind.size();i++){
+        for (int i = 0; i <elektrihind.size();i++){
             summa += elektrihind.get(i).getHind();
         }
         return Math.round(summa/ elektrihind.size()*100)/100.0;
     }
 
     private void loeJson(JSONObject statesJson, String riik){
-        System.out.println("võttan array'st välja riigi");
-        System.out.println(riik);
         JSONArray dataRiik = (JSONArray) statesJson.get(riik);
-        System.out.println(dataRiik.size());
-        System.out.println("Hakkan hakkima");
         for (int i = 0; i < dataRiik.size();i++){
             JSONObject tunniInfo = (JSONObject) dataRiik.get(i);
-            System.out.println("tund " + i);
             String aeg = tunnidTimestampist((Long) tunniInfo.get("timestamp"));
             double hind = Math.round(((double) tunniInfo.get("price"))/10.0*100)/100.0;
             Elektrihind tunnihind = new Elektrihind(aeg,hind);
@@ -73,22 +68,30 @@ public class KuvaElektriHind {
         }
     }
 
-    public String leiaKeskmised (JSONObject statesJson, String riik){
-        System.out.println("nullin");
+    public double leiaKeskmised (JSONObject statesJson, String riik){
+        teeEttevalmistus(statesJson,riik);
+        return leiaKeskmine();
+    }
+
+    public double leiaMaxHind (JSONObject statesJson, String riik){
+        teeEttevalmistus(statesJson,riik);
+        topUp(1);
+        return tipud.get(0).getHind();
+    }
+
+    public double leiaMinHind (JSONObject statesJson, String riik){
+        teeEttevalmistus(statesJson,riik);
+        topDown(1);
+        return põhjad.get(0).getHind();
+    }
+
+    public List<Elektrihind> leiaHinnad(JSONObject statesJson, String riik){
+        teeEttevalmistus(statesJson,riik);
+        return elektrihind;
+    }
+
+    private void teeEttevalmistus (JSONObject statesJson, String riik){
         nulliListid();
-        System.out.println(statesJson.size());
-        System.out.println("loen json");
         loeJson(statesJson, riik);
-        System.out.println("arvutan top'id");
-        int topPikkus = 1;
-        topUp(topPikkus);
-        topDown(topPikkus);
-        System.out.println("leian keskmise");
-        keskmineHind = String.valueOf(leiaKeskmine());
-        //minHind = String.valueOf(tipud.get(0).getHind()) + " " + String.valueOf(tipud.get(0).getAeg());
-        //maksHind = String.valueOf(põhjad.get(0).getHind()) + " " + String.valueOf(põhjad.get(0).getAeg());
-        //System.out.println(minHind);
-        //System.out.println(maksHind);
-        return keskmineHind;
     }
 }

@@ -41,22 +41,41 @@ public class Paevahind {
 
     public List<Elektrihind> getPäevaHinnad() throws IOException, ParseException {
         List<Elektrihind> paevaHinnad = new ArrayList<>();
-        leiaAeg();
-        EleringJsonApi eleringData = new EleringJsonApi(restEndPoint);
+        teeEttevalmistus();
         KuvaElektriHind kuvaElektriHind = new KuvaElektriHind();
-        eleringData.setStart(perioodiAlgus);
-        eleringData.setEnd(perioodiLõpp);
-        data = eleringData.getEleringData();
-        System.out.println(kuvaElektriHind.leiaKeskmised(data,riik));
-
-
-
+        paevaHinnad = kuvaElektriHind.leiaHinnad((JSONObject) data.get("data"),riik);
         return paevaHinnad;
+    }
+
+    public double keskmineHind () throws IOException, ParseException {
+        teeEttevalmistus();
+        KuvaElektriHind kuvaElektriHind = new KuvaElektriHind();
+        return kuvaElektriHind.leiaKeskmised((JSONObject) data.get("data"),riik);
+    }
+
+    public double maksimaalneHind () throws IOException, ParseException {
+        teeEttevalmistus();
+        KuvaElektriHind kuvaElektriHind = new KuvaElektriHind();
+        return kuvaElektriHind.leiaMaxHind((JSONObject) data.get("data"),riik);
+    }
+
+    public double minimaalneHind () throws IOException, ParseException {
+        teeEttevalmistus();
+        KuvaElektriHind kuvaElektriHind = new KuvaElektriHind();
+        return kuvaElektriHind.leiaMinHind((JSONObject) data.get("data"),riik);
     }
 
     private void leiaAeg (){
         perioodiAlgus = sdformat.format(new Date((System.currentTimeMillis())));
         perioodiLõpp = sdformat.format(new Date((System.currentTimeMillis() + 24*60*60*1000)));
+    }
+
+    private void teeEttevalmistus () throws IOException, ParseException {
+        leiaAeg();
+        EleringJsonApi eleringData = new EleringJsonApi(restEndPoint);
+        eleringData.setStart(perioodiAlgus);
+        eleringData.setEnd(perioodiLõpp);
+        data = eleringData.getEleringData();
     }
 }
 
