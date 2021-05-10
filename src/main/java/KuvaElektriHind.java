@@ -68,16 +68,21 @@ public class KuvaElektriHind {
         }
     }
 
-    public void leiaMinMaxKeskm (JSONObject statesJson, String riik){
+    public String leiaKeskmised (JSONObject statesJson, String riik){
+        System.out.println("nullin");
         nulliListid();
+        System.out.println("loen json");
         loeJson(statesJson, riik);
+        System.out.println("arvutan top'id");
         int topPikkus = 1;
         topUp(topPikkus);
         topDown(topPikkus);
+        System.out.println("leian keskmise");
         keskmineHind = String.valueOf(leiaKeskmine());
-        minHind = String.valueOf(tipud.get(0).getHind()) + " " + String.valueOf(tipud.get(0).getAeg());
-        maksHind = String.valueOf(põhjad.get(0).getHind()) + " " + String.valueOf(põhjad.get(0).getAeg());
-        System.out.println(minHind);
-        System.out.println(maksHind);
+        //minHind = String.valueOf(tipud.get(0).getHind()) + " " + String.valueOf(tipud.get(0).getAeg());
+        //maksHind = String.valueOf(põhjad.get(0).getHind()) + " " + String.valueOf(põhjad.get(0).getAeg());
+        //System.out.println(minHind);
+        //System.out.println(maksHind);
+        return keskmineHind;
     }
 }
