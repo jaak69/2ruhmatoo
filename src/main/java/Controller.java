@@ -4,7 +4,11 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.FileChooser;
+import org.json.simple.parser.ParseException;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 
@@ -54,6 +58,13 @@ public class Controller implements Initializable {
     }
     @FXML
     public void päevahindKuva(ActionEvent actionEvent) {
+        try {
+            showPäevahind((String)riikValik.getValue());
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
     @FXML
     public void valikuhindKuva(ActionEvent actionEvent) {
@@ -75,26 +86,49 @@ public class Controller implements Initializable {
     }
     @FXML
     public void kaivitaParingUuteAndmetega(ActionEvent actionEvent) {
+
+        if (paevahind.isSelected()){
+            try {
+                showPäevahind((String) riikValik.getValue());
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+
     }
     @FXML
     public void salvestaCSVFail(ActionEvent actionEvent) {
+        FileChooser fileChooser = new FileChooser();
+        //Set extension filter for text files
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv");
+        fileChooser.getExtensionFilters().add(extFilter);
+
+        //Show save file dialog
+        File file = fileChooser.showSaveDialog(null);
+
+
     }
 
-    public void showPäevahind(String valitudRiik){
+    public void showPäevahind(String valitudRiik) throws IOException, ParseException {
+        //seadista vahemiku valik mitteaktiivseks, kui on aktiivne
         if (valikuhind.isSelected()){
             valikuhind.setSelected(false);
         }
 
+        //päevavaliku menüünupp aktiivseks
+        paevahind.setSelected(true);
+
+        //peida kuupäeva valikud
         algusKuupaev.setVisible(false);
         lopuKuupaev.setVisible(false);
 
-        paevahind.setSelected(true);
+        //Tõmba eleringist hetkest kuni 24H homseni
+        Paevahind elektriHinnad = new Paevahind(valitudRiik.toLowerCase(Locale.ROOT));
+        List<Elektrihind> elekter24h = elektriHinnad.getPäevaHinnad();
 
-        List<Elektrihind> elektrihinnadTest = new ArrayList<>();
-
-        elektrihinnadTest.add(new Elektrihind("2021-05-01 10:00",0.26));
-        elektrihinnadTest.add(new Elektrihind("2021-05-01 11:00",0.28));
-
+        //Tühjenda tabel
         tabelElektrihinnad.getItems().clear();
         tabelElektrihinnad.getColumns().clear();
 
@@ -108,12 +142,15 @@ public class Controller implements Initializable {
         tabelElektrihinnad.getColumns().add(kellaAegColumn);
         tabelElektrihinnad.getColumns().add(kwhHind);
 
-        for (int i = 0; i < 32; i++) {
-
-            Random rd = new Random(); // creating Random object
-            tabelElektrihinnad.getItems().add(new Elektrihind("2021-05-01 10:00" + " " + i, rd.nextDouble()));
-
+        //Andmete lisamine tabelisse
+        for (Elektrihind tund : elekter24h) {
+            tabelElektrihinnad.getItems().add(tund);
         }
+
+        //Ülemises ringid paika
+        elektrihindMaxPeriood.setText(String.valueOf(elektriHinnad.maksimaalneHind()));
+        elektrihimdMinPeriood.setText(String.valueOf(elektriHinnad.minimaalneHind()));
+        elektrihindKeskminePeriood.setText(String.valueOf(elektriHinnad.keskmineHind()));
     }
 
     @Override
@@ -121,7 +158,13 @@ public class Controller implements Initializable {
 
         valitudRiik = (String) riikValik.getValue();
 
-        showPäevahind(valitudRiik);
+        try {
+            showPäevahind(valitudRiik);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
     }
 }
