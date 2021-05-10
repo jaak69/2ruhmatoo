@@ -121,8 +121,6 @@ public class Controller implements Initializable {
 
     }
 
-
-
     public void showPäevahind(String valitudRiik) throws IOException, ParseException {
         //seadista vahemiku valik mitteaktiivseks, kui on aktiivne
         if (valikuhind.isSelected()){
@@ -179,8 +177,15 @@ public class Controller implements Initializable {
         valiAasta.setVisible(true);
 
         //Tõmba eleringist hetkest kuni 24H homseni
-//        Paevahind elektriHinnad = new Paevahind(valitudRiik.toLowerCase(Locale.ROOT));
-//        List<Elektrihind> elekter24h = elektriHinnad.getPäevaHinnad();
+         PerioodiHind elektriHinnad = new PerioodiHind(valitudRiik.toLowerCase(Locale.ROOT),Integer.parseInt(vKuu),
+                 Integer.parseInt(vAasta));
+        try {
+            List<ElektriHindPaev> elekter24h = elektriHinnad.getPerioodiHinnad();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
         //Tühjenda tabel
         tabelElektrihinnad.getItems().clear();
