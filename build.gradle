@@ -16,6 +16,10 @@ mainClassName = 'Main'
 group '2.rühmatöö'
 version '1.0'
 
+
+compileJava.options.encoding = "UTF-8"
+compileTestJava.options.encoding = "UTF-8"
+
 repositories {
     mavenCentral()
 }
