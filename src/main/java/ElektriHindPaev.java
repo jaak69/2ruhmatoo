@@ -1,14 +1,14 @@
-public class ElektriHindPäev extends Elektrihind{
+public class ElektriHindPaev extends Elektrihind{
     private double maxHind;
     private double minHind;
 
-    public ElektriHindPäev(String aeg, double hind, double maxHind, double minHind) {
+    public ElektriHindPaev(String aeg, double hind, double maxHind, double minHind) {
         super(aeg, hind);
         this.maxHind = maxHind;
         this.minHind = minHind;
     }
 
-    public ElektriHindPäev(){
+    public ElektriHindPaev(){
     }
 
     public double getMaxHind() {
@@ -29,7 +29,7 @@ public class ElektriHindPäev extends Elektrihind{
 
     @Override
     public String toString() {
-        return "ElektriHindPäev{" +
+        return "ElektriHindPaev{" +
                 "maxHind=" + maxHind +
                 ", minHind=" + minHind +
                 "} " + super.toString();
